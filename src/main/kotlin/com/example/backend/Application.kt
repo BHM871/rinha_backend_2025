@@ -1,7 +1,8 @@
 package com.example.backend
 
 import com.example.backend.plugins.configureRouting
-import io.ktor.server.application.*
+import com.example.backend.plugins.configureSerialization
+import io.ktor.server.application.Application
 import io.ktor.server.netty.EngineMain
 
 fun main(args: Array<String>) {
@@ -9,5 +10,6 @@ fun main(args: Array<String>) {
 }
 
 fun Application.module() {
+    configureSerialization()
     configureRouting()
 }
