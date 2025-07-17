@@ -1,5 +1,6 @@
 package com.example.backend
 
+import com.example.backend.plugins.configureRouting
 import io.ktor.server.application.*
 import io.ktor.server.netty.EngineMain
 
