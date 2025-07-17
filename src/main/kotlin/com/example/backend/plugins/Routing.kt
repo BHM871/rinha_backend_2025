@@ -1,13 +1,15 @@
 package com.example.backend.plugins
 
-import io.ktor.server.application.*
-import io.ktor.server.response.*
-import io.ktor.server.routing.*
+import com.example.backend.handlers.PostPaymentsHandler
+import com.example.backend.handlers.GetPaymentsSummaryHandler
+import io.ktor.server.application.Application
+import io.ktor.server.routing.get
+import io.ktor.server.routing.post
+import io.ktor.server.routing.routing
 
 fun Application.configureRouting() {
     routing {
-        get("/") {
-            call.respondText("Hello World!")
-        }
+        post("/payments")         { PostPaymentsHandler      (call).process() }
+        get ("/payments-summary") { GetPaymentsSummaryHandler(call).process() }
     }
 }
