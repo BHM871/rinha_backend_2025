@@ -11,7 +11,7 @@ abstract class Handler : RoutingHandler {
 
     lateinit var call: RoutingCall
 
-    protected fun valid(): Boolean {
+    protected open fun isValid(value: Any): Boolean {
         TODO("Not Implemented")
     }
 

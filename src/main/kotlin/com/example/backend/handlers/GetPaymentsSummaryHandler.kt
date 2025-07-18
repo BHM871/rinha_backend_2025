@@ -18,7 +18,10 @@ class GetPaymentsSummaryHandler : Handler() {
             parameters["to"]
         )
 
-        if (!isValid(filter)) respond<String>(status = HttpStatusCode.UnprocessableEntity)
+        if (!isValid(filter)) {
+            respond<String>(status = HttpStatusCode.UnprocessableEntity)
+            return
+        }
 
         respond(
             Summary(
@@ -26,5 +29,10 @@ class GetPaymentsSummaryHandler : Handler() {
                 fallback = ProcessorInfos(423545, BigDecimal.valueOf(329347.34))
             )
         )
+    }
+
+    override fun isValid(value: Any): Boolean {
+        return if (value !is FilterSummary) false
+        else !(value.from != null && value.to != null && value.to < value.from)
     }
 }
