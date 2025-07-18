@@ -1,39 +1,25 @@
-# backend
+# rinha_2025
 
-This project was created using the [Ktor Project Generator](https://start.ktor.io).
 
-Here are some useful links to get you started:
+This project uses [Gradle](https://gradle.org/).
+To build and run the application, use the *Gradle* tool window by clicking the Gradle icon in the right-hand toolbar,
+or run it directly from the terminal:
 
-- [Ktor Documentation](https://ktor.io/docs/home.html)
-- [Ktor GitHub page](https://github.com/ktorio/ktor)
-- The [Ktor Slack chat](https://app.slack.com/client/T09229ZC6/C0A974TJ9). You'll need to [request an invite](https://surveys.jetbrains.com/s3/kotlin-slack-sign-up) to join.
+* Run `./gradlew run` to build and run the application.
+* Run `./gradlew build` to only build the application.
+* Run `./gradlew check` to run all checks, including tests.
+* Run `./gradlew clean` to clean all build outputs.
 
-## Features
+Note the usage of the Gradle Wrapper (`./gradlew`).
+This is the suggested way to use Gradle in production projects.
 
-Here's a list of features included in this project:
+[Learn more about the Gradle Wrapper](https://docs.gradle.org/current/userguide/gradle_wrapper.html).
 
-| Name                                               | Description                                                 |
-| ----------------------------------------------------|------------------------------------------------------------- |
-| [Routing](https://start.ktor.io/p/routing-default) | Allows to define structured routes and associated handlers. |
+[Learn more about Gradle tasks](https://docs.gradle.org/current/userguide/command_line_interface.html#common_tasks).
 
-## Building & Running
 
-To build or run the project, use one of the following tasks:
+This project follows the suggested multi-module setup and consists of the `app` and `utils` subprojects.
+The shared build logic was extracted to a convention plugin located in `buildSrc`.
 
-| Task                          | Description                                                          |
-| -------------------------------|---------------------------------------------------------------------- |
-| `./gradlew test`              | Run the tests                                                        |
-| `./gradlew build`             | Build everything                                                     |
-| `buildFatJar`                 | Build an executable JAR of the server with all dependencies included |
-| `buildImage`                  | Build the docker image to use with the fat JAR                       |
-| `publishImageToLocalRegistry` | Publish the docker image locally                                     |
-| `run`                         | Run the server                                                       |
-| `runDocker`                   | Run using the local docker image                                     |
-
-If the server starts successfully, you'll see the following output:
-
-```
-2024-12-04 14:32:45.584 [main] INFO  Application - Application started in 0.303 seconds.
-2024-12-04 14:32:45.682 [main] INFO  Application - Responding at http://0.0.0.0:8080
-```
-
+This project uses a version catalog (see `gradle/libs.versions.toml`) to declare and version dependencies
+and both a build cache and a configuration cache (see `gradle.properties`).
