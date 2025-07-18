@@ -5,12 +5,11 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.server.response.header
 import io.ktor.server.response.respondNullable
 import io.ktor.server.routing.RoutingCall
+import io.ktor.server.routing.RoutingHandler
 
-abstract class Handler {
+abstract class Handler : RoutingHandler {
 
-    abstract val ctx: RoutingCall
-
-    abstract suspend fun process()
+    lateinit var call: RoutingCall
 
     protected fun valid(): Boolean {
         TODO("Not Implemented")
@@ -21,7 +20,7 @@ abstract class Handler {
         contentType: ContentType = ContentType.parse("application/json; charset=UTF-8"),
         status: HttpStatusCode = HttpStatusCode.OK
     ) {
-        ctx.response.header("Content-Type", "${contentType.contentType}/${contentType.contentSubtype}")
-        ctx.respondNullable(status, body)
+        call.response.header("Content-Type", "${contentType.contentType}/${contentType.contentSubtype}")
+        call.respondNullable(status, body)
     }
 }

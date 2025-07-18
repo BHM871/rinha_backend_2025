@@ -9,7 +9,7 @@ import io.ktor.server.routing.routing
 
 fun Application.configureRouting() {
     routing {
-        post("/payments")         { PostPaymentsHandler      (call).process() }
-        get ("/payments-summary") { GetPaymentsSummaryHandler(call).process() }
+        post("/payments"        , PostPaymentsHandler()      )
+        get ("/payments-summary", GetPaymentsSummaryHandler())
     }
 }
