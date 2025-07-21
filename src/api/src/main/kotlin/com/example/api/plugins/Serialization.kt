@@ -1,4 +1,4 @@
-package com.example.backend.plugins
+package com.example.api.plugins
 
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.Application

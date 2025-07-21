@@ -1,4 +1,4 @@
-package com.example.backend.handlers
+package com.example.api.handlers
 
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode

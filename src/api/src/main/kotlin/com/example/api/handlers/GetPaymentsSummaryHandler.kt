@@ -1,8 +1,8 @@
-package com.example.backend.handlers
+package com.example.api.handlers
 
-import com.example.backend.core.FilterSummary
-import com.example.backend.core.ProcessorInfos
-import com.example.backend.core.Summary
+import com.example.api.core.FilterSummary
+import com.example.api.core.ProcessorInfos
+import com.example.api.core.Summary
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.routing.RoutingContext
 import java.math.BigDecimal

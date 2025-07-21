@@ -1,7 +1,7 @@
-package com.example.backend
+package com.example.api
 
-import com.example.backend.plugins.configureRouting
-import com.example.backend.plugins.configureSerialization
+import com.example.api.plugins.configureRouting
+import com.example.api.plugins.configureSerialization
 import io.ktor.server.application.Application
 import io.ktor.server.netty.EngineMain
 

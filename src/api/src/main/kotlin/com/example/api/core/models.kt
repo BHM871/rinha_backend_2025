@@ -1,6 +1,6 @@
-package com.example.backend.core
+package com.example.api.core
 
-import com.example.backend.plugins.BigDecimalSerializer
+import com.example.api.plugins.BigDecimalSerializer
 import kotlinx.serialization.Serializable
 import java.math.BigDecimal
 import java.time.LocalDateTime

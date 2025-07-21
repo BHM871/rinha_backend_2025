@@ -1,6 +1,6 @@
-package com.example.backend.handlers
+package com.example.api.handlers
 
-import com.example.backend.core.Payment
+import com.example.api.core.Payment
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.request.receive
 import io.ktor.server.routing.RoutingContext
