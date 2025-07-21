@@ -18,7 +18,7 @@ FROM openjdk:17-jdk-slim AS runtime
 WORKDIR /app
 
 # Copy the built JAR from the build stage
-COPY --from=build /home/gradle/src/build/libs/*.jar /app/app.jar
+COPY --from=build /home/gradle/src/src/api/build/libs/*.jar /app/app.jar
 
 # Expose the application port (e.g., for a web application)
 EXPOSE 8080

@@ -1,5 +1,6 @@
 plugins {
-    kotlin("jvm") version "2.1.10"
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kotlin.plugin.serialization)
 }
 
 group = "com.example"
@@ -11,6 +12,6 @@ repositories {
 
 dependencies {
     implementation(libs.ktor.server.content.negotiation)
-    implementation(libs.ktor.serialization.kotlinx.json)
+    implementation(libs.ktor.serialization)
     testImplementation(libs.kotlin.test.junit)
 }
