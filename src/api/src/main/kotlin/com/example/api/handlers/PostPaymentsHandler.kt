@@ -1,11 +1,10 @@
 package com.example.api.handlers
 
 import com.example.api.core.Payment
+import com.example.api.core.now
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.request.receive
 import io.ktor.server.routing.RoutingContext
-import java.time.LocalDateTime
-import java.time.ZoneOffset
 import java.util.UUID
 
 class PostPaymentsHandler : Handler() {
@@ -21,7 +20,7 @@ class PostPaymentsHandler : Handler() {
         payment = Payment(
             payment.correlationId,
             payment.amount,
-            LocalDateTime.now(ZoneOffset.UTC)
+            now()
         )
     }
 

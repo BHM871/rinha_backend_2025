@@ -38,9 +38,3 @@ data class FilterSummary(
         LocalDateTime.parse(to ?: "9999-01-01T00:00:00.000Z", Formatters.localDateTimeFormatter)
     )
 }
-
-class Formatters {
-    companion object {
-        val localDateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-    }
-}
