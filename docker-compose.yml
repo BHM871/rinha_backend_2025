@@ -1,0 +1,34 @@
+version: "3"
+
+x-service-templates:
+  api: &api
+    image: bhm871/rinha-backend.api:2025
+    build:
+      dockerfile: src/api/Dockerfile
+      additional_contexts:
+        - project=.
+        - api=src/api/
+    environment:
+      - REDIS_PORT=6379
+    networks:
+      - backend
+
+services:
+  api:
+    <<: *api
+    container_name: api
+    ports:
+      - "9999:8080"
+
+  redis:
+    image: redis:8-alpine
+    container_name: redis
+    hostname: redis
+    depends_on:
+      - api
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
