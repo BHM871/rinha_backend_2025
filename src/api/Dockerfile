@@ -5,10 +5,10 @@ WORKDIR /home/gradle/src
 # Copy Gradle wrapper and build files first to leverage Docker caching
 COPY --from=project gradle ./gradle
 COPY --from=project settings.gradle.kts .
-COPY --from=backend build.gradle.kts .
+COPY --from=api build.gradle.kts .
 
 # Copy source code and other project files
-COPY --from=backend src ./src
+COPY --from=api src ./src
 
 # Build the fat JAR (or shadow JAR/boot JAR)
 RUN gradle buildFatJar --no-daemon
