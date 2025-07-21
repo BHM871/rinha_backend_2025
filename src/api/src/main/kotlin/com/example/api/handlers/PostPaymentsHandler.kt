@@ -1,7 +1,7 @@
 package com.example.api.handlers
 
-import com.example.api.core.Payment
-import com.example.api.core.now
+import com.example.models.core.Payment
+import com.example.models.core.now
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.request.receive
 import io.ktor.server.routing.RoutingContext

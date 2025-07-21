@@ -1,8 +1,8 @@
 package com.example.api.handlers
 
-import com.example.api.core.FilterSummary
-import com.example.api.core.ProcessorInfos
-import com.example.api.core.Summary
+import com.example.models.core.FilterSummary
+import com.example.models.core.ProcessorInfos
+import com.example.models.core.Summary
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.routing.RoutingContext
 import java.math.BigDecimal
@@ -33,6 +33,6 @@ class GetPaymentsSummaryHandler : Handler() {
 
     override fun isValid(value: Any): Boolean {
         return if (value !is FilterSummary) false
-        else !(value.from != null && value.to != null && value.to < value.from)
+        else !(value.from != null && value.to != null && value.to!! < value.from!!)
     }
 }

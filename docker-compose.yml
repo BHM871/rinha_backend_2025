@@ -7,7 +7,7 @@ x-service-templates:
       dockerfile: src/api/Dockerfile
       additional_contexts:
         - project=.
-        - api=src/api/
+        - modules=src/
     environment:
       - REDIS_PORT=6379
     networks:

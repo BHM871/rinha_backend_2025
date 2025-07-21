@@ -1,4 +1,4 @@
-package com.example.api.core
+package com.example.models.core
 
 import java.time.LocalDateTime
 import java.time.ZoneOffset

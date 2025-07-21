@@ -24,6 +24,7 @@ dependencies {
     implementation(libs.logback.classic)
     implementation(libs.ktor.server.core)
     implementation(libs.ktor.server.config.yaml)
+    implementation(project(":src:models"))
     testImplementation(libs.ktor.server.test.host)
     testImplementation(libs.kotlin.test.junit)
 }

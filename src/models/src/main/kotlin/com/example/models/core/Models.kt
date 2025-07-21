@@ -1,11 +1,10 @@
-package com.example.api.core
+package com.example.models.core
 
-import com.example.api.plugins.BigDecimalSerializer
-import com.example.api.plugins.LocalDateTimeSerializer
+import com.example.models.plugins.BigDecimalSerializer
+import com.example.models.plugins.LocalDateTimeSerializer
 import kotlinx.serialization.Serializable
 import java.math.BigDecimal
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 @Serializable
 data class Payment(
