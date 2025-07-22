@@ -1,5 +1,6 @@
 package com.example.api.handlers
 
+import com.example.redis.core.app.Mediator
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.response.header
@@ -9,6 +10,7 @@ import io.ktor.server.routing.RoutingHandler
 
 abstract class Handler : RoutingHandler {
 
+    abstract val mediator: Mediator
     lateinit var call: RoutingCall
 
     protected open fun isValid(value: Any): Boolean {

@@ -9,6 +9,7 @@ x-service-templates:
         - project=.
         - modules=src/
     environment:
+      - REDIS_HOST=redis
       - REDIS_PORT=6379
     networks:
       - backend

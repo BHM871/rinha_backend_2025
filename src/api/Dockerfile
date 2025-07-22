@@ -9,6 +9,7 @@ COPY --from=project settings.gradle.kts .
 # Copy source code and other project files
 COPY --from=modules api ./src/api
 COPY --from=modules models ./src/models
+COPY --from=modules redis ./src/redis
 
 # Build the fat JAR (or shadow JAR/boot JAR)
 RUN gradle src:api:buildFatJar --no-daemon
@@ -24,4 +25,4 @@ COPY --from=build /home/gradle/src/src/api/build/libs/*.jar /app/app.jar
 EXPOSE 8080
 
 # Define the command to run the application
-ENTRYPOINT [ "java", "-jar", "/app/app.jar" ]
+ENTRYPOINT ["sh", "-c", "exec java ${JAVA_OPTS} -jar app.jar"]
