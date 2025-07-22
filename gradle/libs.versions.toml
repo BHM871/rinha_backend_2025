@@ -14,6 +14,7 @@ ktor-server-netty = { module = "io.ktor:ktor-server-netty", version.ref = "ktor-
 logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback-version" }
 ktor-server-config-yaml = { module = "io.ktor:ktor-server-config-yaml", version.ref = "ktor-version" }
 ktor-server-test-host = { module = "io.ktor:ktor-server-test-host", version.ref = "ktor-version" }
+ktor-dependency-injector = { module = "io.ktor:ktor-server-di", version.ref = "ktor-version" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin-version" }
 redis-client = { module = "redis.clients:jedis", version.ref = "redis-client-version" }
 redis-pool = { module = "org.apache.commons:commons-pool2", version.ref = "redis-pool-version" }
