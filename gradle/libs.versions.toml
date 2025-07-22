@@ -3,6 +3,8 @@
 kotlin-version = "2.1.10"
 ktor-version = "3.2.2"
 logback-version = "1.5.13"
+redis-client-version = "6.0.0"
+redis-pool-version = "2.12.1"
 
 [libraries]
 ktor-server-content-negotiation = { module = "io.ktor:ktor-server-content-negotiation", version.ref = "ktor-version" }
@@ -13,6 +15,8 @@ logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "lo
 ktor-server-config-yaml = { module = "io.ktor:ktor-server-config-yaml", version.ref = "ktor-version" }
 ktor-server-test-host = { module = "io.ktor:ktor-server-test-host", version.ref = "ktor-version" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin-version" }
+redis-client = { module = "redis.clients:jedis", version.ref = "redis-client-version" }
+redis-pool = { module = "org.apache.commons:commons-pool2", version.ref = "redis-pool-version" }
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin-version" }
