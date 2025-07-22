@@ -11,6 +11,8 @@ x-service-templates:
     environment:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
+    depends_on:
+      - redis
     networks:
       - backend
 
@@ -31,14 +33,10 @@ services:
   api01:
     <<: *api
     container_name: api01
-    depends_on:
-      - redis
 
   api02:
     <<: *api
     container_name: api02
-    depends_on:
-      - redis
 
   redis:
     image: redis:8-alpine
