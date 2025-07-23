@@ -42,11 +42,11 @@ class RedisQueue(
         )
     }
 
-     fun dequeue(inTop: Boolean): Payment? {
+     fun dequeue(reverse: Boolean): Payment? {
         if (!isSetup)
             setup()
 
-        val tuple = if (inTop) {
+        val tuple = if (reverse) {
             jedis.zpopmax(queue)
         } else {
             jedis.zpopmin(queue)

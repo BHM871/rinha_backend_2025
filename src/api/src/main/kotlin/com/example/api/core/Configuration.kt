@@ -1,5 +1,6 @@
 package com.example.api.core
 
+import com.example.api.repository.RedisRepository
 import com.example.redis.RedisMediator
 import com.example.redis.core.app.Mediator
 import com.example.redis.gateway.RedisQueue
@@ -12,4 +13,5 @@ fun Application.configureRedis() {
     val host = property<String>("redis.host")
     val port = property<Int>("redis.port")
     dependencies.provide<Mediator> { RedisMediator(host, port) }
+    dependencies.provide<RedisRepository> { RedisRepository(dependencies.resolve<Mediator>()) }
 }
