@@ -1,6 +1,6 @@
 package com.example.worker
 
-import com.example.worker.application.Application
+import com.example.worker.core.Application
 
 fun main() {
     Application().start()

@@ -1,33 +1,24 @@
-package com.example.worker.application
+package com.example.worker.util
 
-import java.io.FileInputStream
 import java.io.InputStreamReader
 
-class Properties {
-
-    fun loadProperties() {
-        val reader = getReader()
-        if (reader == null) return
-
-        readFile(reader)
-    }
-
-    private fun getReader() : InputStreamReader? {
-        val stream = this.javaClass.classLoader.getResource("application.yaml")
-        if (stream == null) return null
-
-        return InputStreamReader(FileInputStream(stream.path.toString()))
-    }
-
-    private fun readFile(reader: InputStreamReader) {
+class YamlReader(
+    val reader: InputStreamReader
+) {
+    fun readFile() : Map<String, Any?>? {
         val lines = reader.readLines()
 
-        if (lines.isEmpty()) return
+        if (lines.isEmpty()) return null
 
         val indent = getIndent(lines)
-        val phash = readLine(lines, 0, mutableMapOf(), indent)
 
-        saveHash(phash, 0)
+        var hash = mutableMapOf<Int, Pair<String, Any?>>()
+        hash[0] = Pair("", mutableMapOf<String, Any?>())
+
+        hash = readLine(lines, 0, hash, indent)
+        hash = saveHash(hash, 1)
+
+        return hash[0]?.second as Map<String, Any?>?
     }
 
     private fun getIndent(lines: List<String>) : String {
@@ -51,7 +42,7 @@ class Properties {
             .replace(" *: *".toRegex(), ":")
         var level = 0
         var phash = hash
-        for (t in 0..line.length) {
+        for (t in 1..line.length) {
             level = t
             if (indent.isNotEmpty() && line.startsWith(indent)) {
                 line = line.substring(indent.length)
@@ -85,7 +76,7 @@ class Properties {
     private fun saveHash(hash: MutableMap<Int, Pair<String, Any?>>, index: Int) : MutableMap<Int, Pair<String, Any?>> {
         var phash = hash
 
-        if (index > 0 && phash[index-1]?.second !is MutableMap<*, *>) {
+        if (phash[index-1]?.second !is MutableMap<*, *>) {
             return phash
         }
 
@@ -93,55 +84,9 @@ class Properties {
             phash = saveHash(phash, index+1)
         }
 
-        if (index == 0) {
-            properties[phash[0]!!.first] = phash[0]?.second
-            return phash
-        }
-
         @Suppress("UNCHECKED_CAST")
         (phash[index-1]!!.second as MutableMap<String, Any?>)[phash[index]!!.first] = phash[index]?.second
 
         return phash
-    }
-
-    companion object {
-        private val properties: MutableMap<String, Any?> = mutableMapOf()
-
-        fun read(key: String) : Any? {
-            if (key == "*")
-                return properties
-
-            val pkeys = key.split("\\.")
-
-            var parent = properties
-            for (i in 0..pkeys.lastIndex) {
-                if (parent[pkeys[i]] == null)
-                    return null
-
-                parent = parent[pkeys[i]] as MutableMap<String, Any?>
-            }
-
-            return parent[pkeys[pkeys.lastIndex]]
-        }
-
-        fun readText(key: String) : String? {
-            val value = read(key)
-            return value?.toString()
-        }
-
-        fun readInt(key: String) : Int? {
-            val value = readText(key)
-            return value?.toIntOrNull()
-        }
-
-        fun readDouble(key: String) : Double? {
-            val value = readText(key)
-            return value?.toDoubleOrNull()
-        }
-
-        fun readBool(key: String) : Boolean? {
-            val value = readText(key)
-            return value?.toBooleanStrictOrNull()
-        }
     }
 }
