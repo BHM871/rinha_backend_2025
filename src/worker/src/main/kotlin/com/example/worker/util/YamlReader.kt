@@ -3,7 +3,7 @@ package com.example.worker.util
 import java.io.InputStreamReader
 
 class YamlReader(
-    val reader: InputStreamReader
+    private val reader: InputStreamReader
 ) {
     fun readFile() : Map<String, Any?>? {
         val lines = reader.readLines()
@@ -40,37 +40,93 @@ class YamlReader(
             .replace("[ \t]*$".toRegex(), "")
             .replace("\"".toRegex(), "")
             .replace(" *: *".toRegex(), ":")
-        var level = 0
+
+        val level = getLevel(line, indent)
+        if (level == null)
+            return readLine(lines, i+1, hash, indent)
+
+        line = line.substring(indent.length*(level-1))
+
         var phash = hash
-        for (t in 1..line.length) {
-            level = t
-            if (indent.isNotEmpty() && line.startsWith(indent)) {
-                line = line.substring(indent.length)
-                continue
-            }
-
-            if (line[0].isWhitespace()) {
-                return readLine(lines, i+1, phash, indent)
-            }
-
-            break
-        }
-
         if (phash[level] != null) {
             phash = saveHash(phash, level)
         }
 
-        val tuple = line.split(":")
-        phash[level] =
-            if (tuple[1].isEmpty()) Pair(tuple[0], mutableMapOf<String, Object>())
-            else {
-                if (tuple[1].toIntOrNull() != null)  Pair(tuple[0], tuple[1].toInt())
-                else if (tuple[1].toDoubleOrNull() != null)  Pair(tuple[0], tuple[1].toDouble())
-                else if (tuple[1].toBooleanStrictOrNull() != null)  Pair(tuple[0], tuple[1].toBooleanStrict())
-                else Pair(tuple[0], tuple[1])
-            }
+        val tmp = getValue(line)
+        if (tmp == null)
+            return readLine(lines, i+1, phash, indent)
+
+        phash[level] = tmp
 
         return readLine(lines, i+1, phash, indent)
+    }
+
+    private fun getLevel(line: String, indent: String) : Int? {
+        var pline = line
+        for (t in 1..pline.length) {
+            if (indent.isNotEmpty() && pline.startsWith(indent)) {
+                pline = pline.substring(indent.length)
+                continue
+            }
+
+            if (pline[0].isWhitespace()) {
+                return null
+            }
+
+            return t
+        }
+        return null
+    }
+
+    private fun getValue(line: String) : Pair<String, Any?>? {
+        val tuple = line.split(":")
+
+        // Simple value
+        if (tuple.size == 2) {
+            if (tuple[1].startsWith("\${") && tuple[1].endsWith("}")) {
+                var value = tuple[1].replace("(\\$\\{[A-Z_.-]*})".toRegex(), "")
+                value = System.getProperty(value) ?: System.getenv(value)
+                Pair(tuple[0], getValueTyped(value))
+            }
+
+            return if (tuple[1].isEmpty()) Pair(tuple[0], mutableMapOf<String, Object>())
+            else Pair(tuple[0], getValueTyped(tuple[1]))
+        }
+
+        // Env value with default
+        if (tuple[1].startsWith("\${") && tuple[tuple.lastIndex].endsWith("}")) {
+            val first = tuple[1].substring(2)
+            val last = tuple[tuple.lastIndex].substring(0, tuple[tuple.lastIndex].length-1)
+            var value = getEnv(first)
+
+            if (value != null && value.isNotEmpty())
+                return Pair(tuple[0], getValueTyped(value))
+
+            for (v in 2..tuple.lastIndex-1) {
+                value = tuple[v]
+                value = getEnv(value)
+
+                if (value != null && value.isNotEmpty())
+                    return Pair(tuple[0], getValueTyped(value))
+            }
+
+            value = getEnv(last) ?: last
+
+            return Pair(tuple[0], getValueTyped(value))
+        }
+
+        return null
+    }
+
+    private fun getValueTyped(value: String) : Any? {
+        return if (value.toIntOrNull() != null) value.toInt()
+        else if (value.toDoubleOrNull() != null) value.toDouble()
+        else if (value.toBooleanStrictOrNull() != null) value.toBooleanStrict()
+        else value
+    }
+
+    private fun getEnv(name: String) : String? {
+        return System.getProperty(name) ?: System.getenv(name)
     }
 
     private fun saveHash(hash: MutableMap<Int, Pair<String, Any?>>, index: Int) : MutableMap<Int, Pair<String, Any?>> {
