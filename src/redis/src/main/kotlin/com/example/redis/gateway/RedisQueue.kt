@@ -21,7 +21,6 @@ class RedisQueue(
 
     override fun setup() {
         if (!isSetup) {
-            println("Redis = $host:$port")
             val poolConfig = ConnectionPoolConfig().apply {
                 maxTotal = 50
                 jmxEnabled = false

@@ -24,7 +24,7 @@ class RedisMediator : Mediator {
         return when (component) {
             is Queuer -> when (event) {
                 Event.ENQUEUE -> queue.enqueue(data!! as Payment)
-                Event.DEQUEUE -> queue.dequeue(data!! as Boolean)
+                Event.DEQUEUE -> queue.dequeue(data as Boolean)
                 else -> null
             }
             is Storage -> when(event) {
