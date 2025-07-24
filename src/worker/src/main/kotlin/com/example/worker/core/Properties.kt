@@ -62,3 +62,5 @@ class Properties {
         return InputStreamReader(FileInputStream(stream.path.toString()))
     }
 }
+
+fun <T : Any> Application.property(key: String, type: KClass<T>) : T? = Properties.property<T>(key, type)
