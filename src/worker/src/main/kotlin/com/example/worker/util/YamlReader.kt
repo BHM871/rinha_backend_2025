@@ -18,6 +18,7 @@ class YamlReader(
         hash = readLine(lines, 0, hash, indent)
         hash = saveHash(hash, 1)
 
+        @Suppress("UNCHECKED_CAST")
         return hash[0]?.second as Map<String, Any?>?
     }
 
@@ -56,7 +57,16 @@ class YamlReader(
         if (tmp == null)
             return readLine(lines, i+1, phash, indent)
 
-        phash[level] = tmp
+        if (tmp.first == "-") {
+            if (phash[level-1]?.second !is MutableList<*>) {
+                phash[level-1] = Pair(phash[level-1]!!.first, mutableListOf<Any?>())
+            }
+
+            @Suppress("UNCHECKED_CAST")
+            (phash[level-1]!!.second as MutableList<Any?>).add(tmp.second)
+        } else {
+            phash[level] = tmp
+        }
 
         return readLine(lines, i+1, phash, indent)
     }
@@ -82,37 +92,40 @@ class YamlReader(
         val tuple = line.split(":")
 
         // Simple value
-        if (tuple.size == 2) {
-            if (tuple[1].startsWith("\${") && tuple[1].endsWith("}")) {
-                var value = tuple[1].replace("(\\$\\{[A-Z_.-]*})".toRegex(), "")
-                value = System.getProperty(value) ?: System.getenv(value)
-                Pair(tuple[0], getValueTyped(value))
-            }
-
-            return if (tuple[1].isEmpty()) Pair(tuple[0], mutableMapOf<String, Object>())
-            else Pair(tuple[0], getValueTyped(tuple[1]))
-        }
-
-        // Env value with default
-        if (tuple[1].startsWith("\${") && tuple[tuple.lastIndex].endsWith("}")) {
-            val first = tuple[1].substring(2)
-            val last = tuple[tuple.lastIndex].substring(0, tuple[tuple.lastIndex].length-1)
-            var value = getEnv(first)
-
-            if (value != null && value.isNotEmpty())
-                return Pair(tuple[0], getValueTyped(value))
-
-            for (v in 2..tuple.lastIndex-1) {
-                value = tuple[v]
-                value = getEnv(value)
+        if (tuple.size >= 2 && tuple[1].isNotEmpty()) {
+            // Try load value by ENV
+            return if (tuple[1].startsWith("\${") && tuple[tuple.lastIndex].endsWith("}")) {
+                val first = tuple[1].substring(2)
+                val last = tuple[tuple.lastIndex].substring(0, tuple[tuple.lastIndex].length-1)
+                var value = getEnv(first)
 
                 if (value != null && value.isNotEmpty())
                     return Pair(tuple[0], getValueTyped(value))
+
+                for (v in 2..tuple.lastIndex-1) {
+                    value = tuple[v]
+                    value = getEnv(value)
+
+                    if (value != null && value.isNotEmpty())
+                        return Pair(tuple[0], getValueTyped(value))
+                }
+
+                value = getEnv(last) ?: last
+
+                Pair(tuple[0], getValueTyped(value))
+            } else {
+                // Only parse fist value
+                Pair(tuple[0], getValueTyped(tuple[1]))
             }
+        }
 
-            value = getEnv(last) ?: last
+        // Object value
+        if (tuple.size == 2 && tuple[1].isEmpty())
+            return Pair(tuple[0], mutableMapOf<String, Any?>())
 
-            return Pair(tuple[0], getValueTyped(value))
+        // Array value
+        if (line.startsWith('-')) {
+            return Pair("-", getValueTyped(line.split(' ')[1]))
         }
 
         return null
