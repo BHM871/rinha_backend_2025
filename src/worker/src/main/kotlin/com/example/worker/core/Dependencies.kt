@@ -5,12 +5,12 @@ import kotlin.reflect.KClass
 object Dependencies {
     val registry: MutableMap<KClass<*>, Any> = mutableMapOf()
 
-    inline fun <reified T : Any> provide(dependency: T) {
-        registry[T::class] = dependency
+    fun <T : Any> provide(type: KClass<T>, dependency: T) {
+        registry[type] = dependency
     }
 
-    inline fun <reified T> resolve() : Any? {
-        return registry[T::class]
+    fun <T : Any> resolve(type: KClass<T>) : Any? {
+        return registry[type]
     }
 }
 
