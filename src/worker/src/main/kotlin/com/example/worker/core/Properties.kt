@@ -55,10 +55,10 @@ class Properties {
                 Int::class -> value.toString().toIntOrNull()
                 Double::class -> value.toString().toDoubleOrNull()
                 Boolean::class -> value.toString().toBooleanStrictOrNull()
-                List::class ->
+                String::class -> value
+                List::class, Map::class ->
                     if (type.isInstance(value)) value
                     else null
-                String::class -> value
                 else -> null
             } as T?
         }
