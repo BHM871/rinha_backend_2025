@@ -16,5 +16,7 @@ repositories {
 
 dependencies {
     implementation(libs.logback.classic)
+    implementation(project(":src:models"))
+    implementation(project(":src:redis"))
     testImplementation(libs.kotlin.test.junit)
 }
