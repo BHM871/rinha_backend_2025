@@ -15,6 +15,10 @@ class Application {
 
         Properties().loadProperties()
 
+        val injectionResolver = Injections(this@Application)
+        injectionResolver.loadInjectors()
+        injectionResolver.inject()
+
         log.info("Worker Started.")
         delay(Duration.INFINITE)
     }
