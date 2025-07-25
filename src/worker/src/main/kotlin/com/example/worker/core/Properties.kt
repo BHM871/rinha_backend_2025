@@ -1,11 +1,15 @@
 package com.example.worker.core
 
 import com.example.worker.util.YamlReader
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.io.FileInputStream
 import java.io.InputStreamReader
 import kotlin.reflect.KClass
 
 class Properties {
+
+    private val log: Logger = LoggerFactory.getLogger(Properties::class.java)
 
     companion object {
         private var properties: Map<String, Any?>? = null
@@ -39,9 +43,11 @@ class Properties {
     }
 
     fun loadProperties() {
+        log.info("Loading properties...")
         val reader = getReader()
         if (reader == null) return
 
+        log.info("Parsing properties values...")
         properties = YamlReader(reader).readFile()
         if (properties != null) {
             parent = mutableMapOf(
@@ -53,12 +59,15 @@ class Properties {
                     .toTypedArray()
             )
         }
+
+        log.info("Properties loaded.")
     }
 
     private fun getReader() : InputStreamReader? {
         val stream = this.javaClass.classLoader.getResource("application.yaml")
         if (stream == null) return null
 
+        log.info("Reading 'application.yaml' file...")
         return InputStreamReader(FileInputStream(stream.path.toString()))
     }
 }
