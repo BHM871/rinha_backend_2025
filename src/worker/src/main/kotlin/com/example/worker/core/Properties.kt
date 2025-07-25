@@ -20,22 +20,44 @@ class Properties {
             if (parent == null)
                 return null
 
-            val pkeys = key.split(".")
+            val pkeys = key.split('.')
 
             var tmp = parent
             for (i in 0..pkeys.lastIndex-1) {
-                if (tmp!![pkeys[i]] == null)
-                    return null
+                tmp = tmp!![pkeys[i]] as MutableMap<String, Any?>?
 
-                tmp = tmp[pkeys[i]] as MutableMap<String, Any?>
+                if (tmp == null)
+                    return null
             }
 
-            val value = tmp!![pkeys[pkeys.lastIndex]].toString()
+            val last = pkeys[pkeys.lastIndex]
+            var value: Any?
+            if (last.contains("\\[[0-9]*\\]".toRegex())) {
+                val lkey = last.substring(0, last.indexOf('['))
+                if (tmp!![lkey] == null)
+                    return null
+
+                val list = tmp[lkey] as List<*>
+
+                val index = last.substring(lkey.length + 1, last.length-1).toIntOrNull()
+                if (index == null || index < 0 || index > list.lastIndex)
+                    return null
+
+                value = list[index]
+            } else {
+                value = tmp!![last]
+            }
+
+            if (value == null)
+                return null
 
             return when(type) {
-                Int::class -> value.toIntOrNull()
-                Double::class -> value.toDoubleOrNull()
-                Boolean::class -> value.toBooleanStrictOrNull()
+                Int::class -> value.toString().toIntOrNull()
+                Double::class -> value.toString().toDoubleOrNull()
+                Boolean::class -> value.toString().toBooleanStrictOrNull()
+                List::class ->
+                    if (type.isInstance(value)) value
+                    else null
                 String::class -> value
                 else -> null
             } as T?
