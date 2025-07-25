@@ -1,0 +1,13 @@
+application:
+    injectors:
+        - com.example.worker.app.config.InjectorKt.inject
+
+    processors:
+        payment:
+            name: "PaymentProcessor"
+            amount: ${PAYMENT_POOL_SIZE:10}
+            module: com.example.worker.processors.PaymentProcessor
+
+redis:
+    host: ${REDIS_HOST:localhost}
+    port: ${REDIS_PORT:6379}
