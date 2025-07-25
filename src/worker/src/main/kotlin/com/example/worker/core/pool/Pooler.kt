@@ -1,7 +1,9 @@
 package com.example.worker.core.pool
 
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class Pooler(
     private val scope: CoroutineScope
@@ -28,8 +30,10 @@ class Pooler(
 
         repeat(size) {
             scope.launch {
-                while (true) {
-                    processor!!.process()
+                withContext(Dispatchers.IO) {
+                    while (true) {
+                        processor!!.process()
+                    }
                 }
             }
         }
