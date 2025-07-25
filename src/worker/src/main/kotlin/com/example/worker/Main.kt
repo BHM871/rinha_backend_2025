@@ -2,6 +2,6 @@ package com.example.worker
 
 import com.example.worker.core.Application
 
-fun main() {
+suspend fun main() {
     Application().start()
 }
