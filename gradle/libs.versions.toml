@@ -6,6 +6,7 @@ logback-version = "1.5.13"
 redis-client-version = "6.0.0"
 redis-pool-version = "2.12.1"
 coroutines-version = "1.10.2"
+shadow-jar-version = "8.1.1"
 
 [libraries]
 ktor-server-content-negotiation = { module = "io.ktor:ktor-server-content-negotiation", version.ref = "ktor-version" }
@@ -25,3 +26,4 @@ kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core",
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin-version" }
 ktor = { id = "io.ktor.plugin", version.ref = "ktor-version" }
 kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin-version" }
+shadow-jar = { id = "com.github.johnrengelman.shadow", version.ref = "shadow-jar-version" }

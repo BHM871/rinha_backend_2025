@@ -1,6 +1,7 @@
 plugins {
-    alias(libs.plugins.kotlin.jvm)
     application
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.shadow.jar)
 }
 
 group = "com.example"
