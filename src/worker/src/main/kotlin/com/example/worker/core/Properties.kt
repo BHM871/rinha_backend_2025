@@ -3,7 +3,6 @@ package com.example.worker.core
 import com.example.worker.util.YamlReader
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import java.io.FileInputStream
 import java.io.InputStreamReader
 import kotlin.reflect.KClass
 
@@ -86,11 +85,11 @@ class Properties {
     }
 
     private fun getReader() : InputStreamReader? {
-        val stream = this.javaClass.classLoader.getResource("application.yaml")
+        val stream = this.javaClass.classLoader.getResourceAsStream("application.yaml")
         if (stream == null) return null
 
         log.info("Reading 'application.yaml' file...")
-        return InputStreamReader(FileInputStream(stream.path.toString()))
+        return InputStreamReader(stream)
     }
 }
 

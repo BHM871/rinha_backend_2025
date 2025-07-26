@@ -44,7 +44,28 @@ services:
     networks:
       - backend
 
+  worker:
+    image: bhm871/rinha-backend.worker:2025
+    build:
+      dockerfile: src/worker/Dockerfile
+      additional_contexts:
+        - project=.
+        - modules=src/
+    container_name: worker
+    environment:
+      - PAYMENT_POOL_SIZE=5
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - redis
+    networks:
+      - backend
+      - payment-processor
+
 networks:
   backend:
     name: rinha-backend
     driver: bridge
+  payment-processor:
+    name: payment-processor
+    external: true
