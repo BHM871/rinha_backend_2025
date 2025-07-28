@@ -14,5 +14,5 @@ object Dependencies {
     }
 }
 
-val Application.dependencies: Dependencies
+val Worker.dependencies: Dependencies
     get() = Dependencies

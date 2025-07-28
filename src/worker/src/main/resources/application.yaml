@@ -1,4 +1,4 @@
-application:
+worker:
     injectors:
         - com.example.worker.app.config.InjectorKt.inject
 

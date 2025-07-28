@@ -7,7 +7,7 @@ import kotlinx.coroutines.CoroutineScope
 import org.slf4j.LoggerFactory
 
 class Processors(
-    private val application: Application,
+    private val application: Worker,
     private val context: CoroutineDispatcher
 ) {
 
@@ -16,7 +16,7 @@ class Processors(
     private val poolers = mutableMapOf<String, Pooler>()
 
     fun loadProcessors() {
-        val processors = application.property("application.processors", Map::class)
+        val processors = application.property("worker.processors", Map::class)
         if (processors == null)
             return
 

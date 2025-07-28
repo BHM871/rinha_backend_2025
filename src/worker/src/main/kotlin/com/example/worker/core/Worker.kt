@@ -7,20 +7,20 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import kotlin.time.Duration
 
-class Application {
+class Worker {
 
-    private val log: Logger = LoggerFactory.getLogger(Application::class.java)
+    private val log: Logger = LoggerFactory.getLogger(Worker::class.java)
 
     suspend fun start() = coroutineScope {
         log.info("Starting Worker...")
 
         Properties().loadProperties()
 
-        val injectionResolver = Injections(this@Application)
+        val injectionResolver = Injections(this@Worker)
         injectionResolver.loadInjectors()
         injectionResolver.inject()
 
-        val processors = Processors(this@Application, Dispatchers.Default)
+        val processors = Processors(this@Worker, Dispatchers.Default)
         processors.loadProcessors()
         processors.startAll()
 

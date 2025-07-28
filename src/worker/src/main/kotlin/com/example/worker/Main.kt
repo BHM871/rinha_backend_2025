@@ -1,7 +1,7 @@
 package com.example.worker
 
-import com.example.worker.core.Application
+import com.example.worker.core.Worker
 
 suspend fun main() {
-    Application().start()
+    Worker().start()
 }

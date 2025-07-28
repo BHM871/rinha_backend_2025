@@ -4,14 +4,14 @@ import org.slf4j.LoggerFactory
 import java.lang.reflect.Method
 
 class Injections(
-    private val application: Application
+    private val application: Worker
 ) {
 
     private val log = LoggerFactory.getLogger(Injections::class.java)
     private val injectors = mutableMapOf<String, Method>()
 
     fun loadInjectors() {
-        val references = application.property("application.injectors", List::class)
+        val references = application.property("worker.injectors", List::class)
         if (references == null || references.isEmpty())
             return
 

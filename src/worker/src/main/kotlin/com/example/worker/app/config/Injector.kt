@@ -4,20 +4,20 @@ import com.example.redis.RedisMediator
 import com.example.redis.core.app.Mediator
 import com.example.worker.client.DefaultGateway
 import com.example.worker.client.FallbackGateway
-import com.example.worker.core.Application
+import com.example.worker.core.Worker
 import com.example.worker.core.dependencies
 import com.example.worker.core.property
 import com.example.worker.processors.HealthProcessor
 import com.example.worker.processors.PaymentProcessor
 import com.example.worker.repository.RedisRepository
 
-fun Application.inject() {
+fun Worker.inject() {
     redisInject()
     gatewayInject()
     processorInject()
 }
 
-fun Application.redisInject() {
+fun Worker.redisInject() {
     val host = property("redis.host", String::class)!!
     val port = property("redis.port", Int::class)!!
     val poolSize = property("redis.poolSize", Int::class)
@@ -29,7 +29,7 @@ fun Application.redisInject() {
     dependencies.provide(RedisRepository::class) { repository }
 }
 
-fun Application.gatewayInject() {
+fun Worker.gatewayInject() {
     var host = property("gateway.default.host", String::class)!!
     var port = property("gateway.default.port", Int::class)!!
     val default = DefaultGateway( host, port )
@@ -43,7 +43,7 @@ fun Application.gatewayInject() {
     dependencies.provide(FallbackGateway::class) { fallback }
 }
 
-fun Application.processorInject() {
+fun Worker.processorInject() {
     val payment = PaymentProcessor(
         dependencies.resolve(RedisRepository::class)!!,
         dependencies.resolve(DefaultGateway::class)!!,

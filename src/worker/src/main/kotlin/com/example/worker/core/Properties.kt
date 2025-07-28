@@ -93,4 +93,4 @@ class Properties {
     }
 }
 
-fun <T : Any> Application.property(key: String, type: KClass<T>) : T? = Properties.property<T>(key, type)
+fun <T : Any> Worker.property(key: String, type: KClass<T>) : T? = Properties.property<T>(key, type)
