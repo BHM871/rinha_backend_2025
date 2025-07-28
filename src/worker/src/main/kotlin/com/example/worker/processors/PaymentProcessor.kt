@@ -1,16 +1,16 @@
 package com.example.worker.processors
 
 import com.example.models.core.Payment
+import com.example.worker.app.models.DefaultProcessor
+import com.example.worker.app.models.FallbackProcessor
 import com.example.worker.app.models.Health
-import com.example.worker.client.DefaultGateway
-import com.example.worker.client.FallbackGateway
 import com.example.worker.core.pool.Processor
 import com.example.worker.repository.RedisRepository
 
 class PaymentProcessor(
     private val repository: RedisRepository,
-    private val defaultGateway: DefaultGateway,
-    private val fallbackGateway: FallbackGateway
+    private val default: DefaultProcessor,
+    private val fallback: FallbackProcessor
 ) : Processor {
     override suspend fun process() {
         val defaultHealth = HealthProcessor.defaultHealth
@@ -18,6 +18,7 @@ class PaymentProcessor(
 
         if (defaultHealth == null || fallbackHealth == null)
             return
+        println("$defaultHealth  $fallbackHealth")
         if (defaultHealth.failing && fallbackHealth.failing)
             return
 
@@ -26,14 +27,17 @@ class PaymentProcessor(
             return
 
         val success = if (onTop(defaultHealth, fallbackHealth)) {
-            defaultGateway.processor(payment, (defaultHealth.minResponseTime * 1.5).toLong())
+            default.client.processor(payment, (defaultHealth.minResponseTime * 1.5).toLong())
         } else {
-            fallbackGateway.processor(payment, (defaultHealth.minResponseTime * 1.5).toLong())
+            fallback.client.processor(payment, (defaultHealth.minResponseTime * 1.5).toLong())
         }
 
-        if (!success) {
-            repository.enqueue(Payment.getScore(payment), payment)
-        }
+        val score = Payment.getScore(payment)
+        val date = Payment.getDate(payment)
+        println(date)
+
+        if (success) repository.store(score, date)
+        else repository.enqueue(Payment.getScore(payment), payment)
     }
 
     private fun onTop(default: Health, fallback: Health) : Boolean {

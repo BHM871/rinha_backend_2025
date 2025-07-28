@@ -2,8 +2,9 @@ package com.example.worker.app.config
 
 import com.example.redis.RedisMediator
 import com.example.redis.core.app.Mediator
-import com.example.worker.client.DefaultGateway
-import com.example.worker.client.FallbackGateway
+import com.example.worker.app.models.DefaultProcessor
+import com.example.worker.app.models.FallbackProcessor
+import com.example.worker.client.ClientGateway
 import com.example.worker.core.Worker
 import com.example.worker.core.dependencies
 import com.example.worker.core.property
@@ -32,26 +33,28 @@ fun Worker.redisInject() {
 fun Worker.gatewayInject() {
     var host = property("gateway.default.host", String::class)!!
     var port = property("gateway.default.port", Int::class)!!
-    val default = DefaultGateway( host, port )
+    var client = ClientGateway(host, port)
 
-    dependencies.provide(DefaultGateway::class) { default }
+    val default = DefaultProcessor(client)
+    dependencies.provide(DefaultProcessor::class) { default }
 
     host = property("gateway.fallback.host", String::class)!!
     port = property("gateway.fallback.port", Int::class)!!
-    val fallback = FallbackGateway( host, port )
+    client = ClientGateway(host, port)
+    val fallback = FallbackProcessor( client )
 
-    dependencies.provide(FallbackGateway::class) { fallback }
+    dependencies.provide(FallbackProcessor::class) { fallback }
 }
 
 fun Worker.processorInject() {
     val payment = PaymentProcessor(
         dependencies.resolve(RedisRepository::class)!!,
-        dependencies.resolve(DefaultGateway::class)!!,
-        dependencies.resolve(FallbackGateway::class)!!
+        dependencies.resolve(DefaultProcessor::class)!!,
+        dependencies.resolve(FallbackProcessor::class)!!
     )
     val health = HealthProcessor(
-        dependencies.resolve(DefaultGateway::class)!!,
-        dependencies.resolve(FallbackGateway::class)!!
+        dependencies.resolve(DefaultProcessor::class)!!,
+        dependencies.resolve(FallbackProcessor::class)!!
     )
 
     dependencies.provide(PaymentProcessor::class) { payment }

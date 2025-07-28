@@ -14,11 +14,11 @@ worker:
 
 gateway:
     default:
-        host: payment-processor-default
-        port: 8080
+        host: ${DEFAULT_PAYMENT_HOST:localhost}
+        port: ${DEFAULT_PAYMENT_PORT:8081}
     fallback:
-        host: payment-processor-fallback
-        port: 8080
+        host: ${FALLBACK_PAYMENT_HOST:localhost}
+        port: ${FALLBACK_PAYMENT_PORT:8082}
 
 redis:
     host: ${REDIS_HOST:localhost}

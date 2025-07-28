@@ -10,12 +10,10 @@ import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
-import io.ktor.http.URLProtocol
 import io.ktor.http.contentType
-import io.ktor.http.path
 import io.ktor.serialization.kotlinx.json.json
 
-class DefaultGateway(
+class ClientGateway(
     override val host: String,
     override val port: Int
 ) : Gateway {
@@ -28,13 +26,7 @@ class DefaultGateway(
 
     override suspend fun processor(payment: String, timeout: Long): Boolean {
         try {
-            val response = client.post {
-                url {
-                    protocol = URLProtocol.HTTP
-                    host = this@DefaultGateway.host
-                    port = this@DefaultGateway.port
-                    path("/payments")
-                }
+            val response = client.post("http://$host:$port/payments") {
                 timeout {
                     requestTimeoutMillis = timeout
                 }
@@ -49,15 +41,11 @@ class DefaultGateway(
     }
 
     override suspend fun health(): Health {
-        val response = client.get {
-            url {
-                protocol = URLProtocol.HTTP
-                host = this@DefaultGateway.host
-                port = this@DefaultGateway.port
-                path("/health")
-            }
+        println("http://${host}:${port}/payments/service-health")
+        val response = client.get("http://$host:$port/payments/service-health") {
             contentType(ContentType.Application.Json)
         }
+        println(response)
 
         return response.body<Health>()
     }

@@ -1,14 +1,14 @@
 package com.example.worker.processors
 
+import com.example.worker.app.models.DefaultProcessor
+import com.example.worker.app.models.FallbackProcessor
 import com.example.worker.app.models.Health
-import com.example.worker.client.DefaultGateway
-import com.example.worker.client.FallbackGateway
 import com.example.worker.core.pool.Processor
 import kotlinx.coroutines.delay
 
 class HealthProcessor(
-    private val defaultGateway: DefaultGateway,
-    private val fallbackGateway: FallbackGateway
+    private val default: DefaultProcessor,
+    private val fallback: FallbackProcessor
 ) : Processor {
 
     companion object {
@@ -19,8 +19,8 @@ class HealthProcessor(
     override suspend fun process() {
         while(true) {
             try {
-                defaultHealth = defaultGateway.health()
-                fallbackHealth = fallbackGateway.health()
+                defaultHealth = default.client.health()
+                fallbackHealth = fallback.client.health()
             } catch (_: Exception) {
             }
             delay(5000)
