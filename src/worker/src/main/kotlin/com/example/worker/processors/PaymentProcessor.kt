@@ -26,9 +26,9 @@ class PaymentProcessor(
             return
 
         val success = if (onTop(defaultHealth, fallbackHealth)) {
-            defaultGateway.processor(payment)
+            defaultGateway.processor(payment, (defaultHealth.minResponseTime * 1.5).toLong())
         } else {
-            fallbackGateway.processor(payment)
+            fallbackGateway.processor(payment, (defaultHealth.minResponseTime * 1.5).toLong())
         }
 
         if (!success) {

@@ -26,7 +26,7 @@ class DefaultGateway(
         }
     } }
 
-    override suspend fun processor(payment: String): Boolean {
+    override suspend fun processor(payment: String, timeout: Long): Boolean {
         try {
             val response = client.post {
                 url {
@@ -36,7 +36,7 @@ class DefaultGateway(
                     path("/payments")
                 }
                 timeout {
-                    requestTimeoutMillis = 5000
+                    requestTimeoutMillis = timeout
                 }
                 contentType(ContentType.Application.Json)
                 setBody(payment)
