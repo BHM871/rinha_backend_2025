@@ -7,6 +7,10 @@ application:
             name: "PaymentProcessor"
             amount: ${PAYMENT_POOL_SIZE:10}
             module: com.example.worker.processors.PaymentProcessor
+        health:
+            name: "PaymentProcessorHealth"
+            amount: 1
+            module: com.example.worker.processors.HealthProcessor
 
 redis:
     host: ${REDIS_HOST:localhost}
