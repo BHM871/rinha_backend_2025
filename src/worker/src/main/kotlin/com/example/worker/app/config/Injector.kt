@@ -7,6 +7,7 @@ import com.example.worker.client.FallbackGateway
 import com.example.worker.core.Application
 import com.example.worker.core.dependencies
 import com.example.worker.core.property
+import com.example.worker.processors.HealthProcessor
 import com.example.worker.processors.PaymentProcessor
 import com.example.worker.repository.RedisRepository
 
@@ -48,6 +49,11 @@ fun Application.processorInject() {
         dependencies.resolve(DefaultGateway::class)!!,
         dependencies.resolve(FallbackGateway::class)!!
     )
+    val health = HealthProcessor(
+        dependencies.resolve(DefaultGateway::class)!!,
+        dependencies.resolve(FallbackGateway::class)!!
+    )
 
     dependencies.provide(PaymentProcessor::class) { payment }
+    dependencies.provide(HealthProcessor::class) { health }
 }
