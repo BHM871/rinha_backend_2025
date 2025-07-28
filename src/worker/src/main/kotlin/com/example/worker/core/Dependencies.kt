@@ -3,7 +3,7 @@ package com.example.worker.core
 import kotlin.reflect.KClass
 
 object Dependencies {
-    val registry: MutableMap<KClass<*>, () -> Any> = mutableMapOf()
+    private val registry: MutableMap<KClass<*>, () -> Any> = mutableMapOf()
 
     fun <T : Any> provide(type: KClass<T>, dependency: () -> T) {
         registry[type] = dependency

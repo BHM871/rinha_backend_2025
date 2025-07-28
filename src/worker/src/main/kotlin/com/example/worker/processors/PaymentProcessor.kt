@@ -16,6 +16,8 @@ class PaymentProcessor(
         val defaultHealth = HealthProcessor.defaultHealth
         val fallbackHealth = HealthProcessor.fallbackHealth
 
+        if (defaultHealth == null || fallbackHealth == null)
+            return
         if (defaultHealth.failing && fallbackHealth.failing)
             return
 

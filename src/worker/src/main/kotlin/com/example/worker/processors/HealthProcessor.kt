@@ -12,8 +12,8 @@ class HealthProcessor(
 ) : Processor {
 
     companion object {
-        lateinit var defaultHealth: Health
-        lateinit var fallbackHealth: Health
+        var defaultHealth: Health? = null
+        var fallbackHealth: Health? = null
     }
 
     override suspend fun process() {
