@@ -18,7 +18,7 @@ class PostPaymentsHandler(
             val payment = Payment.addNow(ctx.call.receive<String>())
             val score = Payment.getScore(payment)
 
-            while(!this.repository.enqueue(score, payment))
+            while(!this.repository.enqueue(score, payment)){}
 
             ctx.call.respondJson(body = "")
         } catch (_: Exception) {
