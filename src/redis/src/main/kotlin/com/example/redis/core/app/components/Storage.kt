@@ -1,13 +1,13 @@
 package com.example.redis.core.app.components
 
 import com.example.models.core.FilterSummary
-import com.example.models.core.Payment
 import com.example.models.core.Summary
 import com.example.redis.core.app.Component
-import com.example.redis.core.app.Event
+import java.math.BigDecimal
+import java.time.LocalDateTime
 
 interface Storage : Component {
-    fun store(payment: Payment) {
+    fun store(store: BigDecimal, data: LocalDateTime) {
         TODO("Not Implemented Yet")
     }
 

@@ -27,7 +27,7 @@ class FallbackGateway(
         }
     } }
 
-    override suspend fun processor(payment: Payment): Boolean {
+    override suspend fun processor(payment: String): Boolean {
         try {
             val response = client.post {
                 url {

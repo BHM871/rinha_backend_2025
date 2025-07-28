@@ -9,7 +9,7 @@ import com.example.redis.core.app.components.Storage
 class RedisRepository(
     override val mediator: Mediator
 ) : Queuer, Storage {
-    override fun dequeue(reverse: Boolean): Payment? {
-        return this.mediator.notify(this, Event.DEQUEUE, reverse) as Payment?
+    override fun dequeue(reverse: Boolean): String? {
+        return this.mediator.notify(this, Event.DEQUEUE, reverse) as String?
     }
 }

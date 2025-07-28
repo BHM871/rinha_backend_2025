@@ -1,13 +1,11 @@
 package com.example.worker.client
 
-import com.example.models.core.Payment
 import com.example.worker.app.interfaces.Gateway
 import com.example.worker.app.models.Health
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.timeout
-import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
@@ -28,7 +26,7 @@ class DefaultGateway(
         }
     } }
 
-    override suspend fun processor(payment: Payment): Boolean {
+    override suspend fun processor(payment: String): Boolean {
         try {
             val response = client.post {
                 url {

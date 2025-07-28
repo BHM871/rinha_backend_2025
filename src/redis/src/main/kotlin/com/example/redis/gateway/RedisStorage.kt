@@ -8,10 +8,12 @@ import com.example.redis.core.RedisClient
 import redis.clients.jedis.ConnectionPoolConfig
 import redis.clients.jedis.JedisPooled
 import java.math.BigDecimal
+import java.time.LocalDateTime
 
 class RedisStorage(
     override val host: String,
-    override val port: Int
+    override val port: Int,
+    override val poolConfig: ConnectionPoolConfig
 ) : RedisClient {
 
     companion object {
@@ -23,17 +25,12 @@ class RedisStorage(
 
     override fun setup() {
         if (!isSetup) {
-            println("Redis = $host:$port")
-            val poolConfig = ConnectionPoolConfig().apply {
-                maxTotal = 50
-                jmxEnabled = false
-            }
             jedis = JedisPooled(poolConfig, host, port)
             isSetup = true
         }
     }
 
-    fun store(payment: Payment) {
+    fun store(store: BigDecimal, data: LocalDateTime) {
         if (!isSetup)
             setup()
 

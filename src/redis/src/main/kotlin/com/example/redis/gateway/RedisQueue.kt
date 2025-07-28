@@ -9,7 +9,8 @@ import java.math.BigDecimal
 
 class RedisQueue(
     override val host: String,
-    override val port: Int
+    override val port: Int,
+    override val poolConfig: ConnectionPoolConfig
 ) : RedisClient {
 
     companion object {
@@ -21,27 +22,23 @@ class RedisQueue(
 
     override fun setup() {
         if (!isSetup) {
-            val poolConfig = ConnectionPoolConfig().apply {
-                maxTotal = 50
-                jmxEnabled = false
-            }
             jedis = JedisPooled(poolConfig, host, port)
             isSetup = true
         }
     }
 
-    fun enqueue(payment: Payment) {
+    fun enqueue(store: BigDecimal, payment: String) {
         if (!isSetup)
             setup()
 
         jedis.zadd(
             queue,
-            payment.amount.divide(BigDecimal.valueOf(1000)).toDouble(),
-            getSerializer().encodeToString(payment)
+            store.toDouble(),
+            payment
         )
     }
 
-     fun dequeue(reverse: Boolean): Payment? {
+     fun dequeue(reverse: Boolean): String? {
         if (!isSetup)
             setup()
 
@@ -51,7 +48,6 @@ class RedisQueue(
             jedis.zpopmin(queue)
         }
 
-        return if (tuple == null) null
-        else getSerializer().decodeFromString<Payment>(tuple.element)
+         return tuple?.element
     }
 }

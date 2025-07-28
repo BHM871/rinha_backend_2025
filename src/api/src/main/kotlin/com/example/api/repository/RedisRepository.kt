@@ -1,7 +1,6 @@
 package com.example.api.repository
 
 import com.example.models.core.FilterSummary
-import com.example.models.core.Payment
 import com.example.models.core.ProcessorInfos
 import com.example.models.core.Summary
 import com.example.redis.core.app.Event
@@ -13,8 +12,13 @@ import java.math.BigDecimal
 class RedisRepository(
     override val mediator: Mediator
 ) : Queuer, Storage {
-    override fun enqueue(payment: Payment) {
-        this.mediator.notify(this, Event.ENQUEUE, payment)
+    override fun enqueue(score: BigDecimal, payment: String) : Boolean {
+        return try {
+            this.mediator.notify(this, Event.ENQUEUE, score, payment)
+            true
+        } catch (_: Exception) {
+            false
+        }
     }
 
     override fun getSummary(filter: FilterSummary): Summary {

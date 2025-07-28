@@ -3,30 +3,35 @@ package com.example.api.handlers
 import com.example.api.repository.RedisRepository
 import com.example.models.core.FilterSummary
 import io.ktor.http.HttpStatusCode
+import io.ktor.server.application.ApplicationCall
+import io.ktor.server.response.respondNullable
 import io.ktor.server.routing.RoutingContext
+import io.ktor.server.routing.RoutingHandler
 
 class GetPaymentsSummaryHandler(
-    override val repository: RedisRepository
-) : Handler() {
+    private val repository: RedisRepository
+) : RoutingHandler {
 
     override suspend fun invoke(ctx: RoutingContext) {
-        this.call = ctx.call
+        try {
+            val parameters = ctx.call.parameters
+            val filter = FilterSummary(
+                parameters["from"],
+                parameters["to"]
+            )
 
-        val parameters = this.call.parameters
-        val filter = FilterSummary(
-            parameters["from"],
-            parameters["to"]
-        )
-
-        if (!isValid(filter)) {
-            return respond<String>(status = HttpStatusCode.UnprocessableEntity)
+            ctx.call.respondJson(body = repository.getSummary(filter))
+        } catch (_: Exception) {
+            ctx.call.respondJson(body = "", status = HttpStatusCode.BadRequest)
         }
-
-        respond(this.repository.getSummary(filter))
     }
 
-    override fun isValid(value: Any): Boolean {
-        return if (value !is FilterSummary) false
-        else !(value.from != null && value.to != null && value.to!! < value.from!!)
+    suspend inline fun <reified T> ApplicationCall.respondJson(
+        body: T?,
+        status: HttpStatusCode = HttpStatusCode.OK
+    ) {
+        respondNullable(
+            status, body
+        )
     }
 }
