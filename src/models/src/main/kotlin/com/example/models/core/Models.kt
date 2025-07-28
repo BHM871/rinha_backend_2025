@@ -1,19 +1,26 @@
 package com.example.models.core
 
 import com.example.models.plugins.BigDecimalSerializer
-import com.example.models.plugins.LocalDateTimeSerializer
 import kotlinx.serialization.Serializable
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
-@Serializable
-data class Payment(
-    val correlationId: String,
-    @Serializable(with = BigDecimalSerializer::class)
-    val amount: BigDecimal,
-    @Serializable(with = LocalDateTimeSerializer::class)
-    val requestedAt: LocalDateTime? = null
-)
+class Payment {
+    companion object {
+        fun getScore(payment: String) : BigDecimal {
+            return payment.substring(
+                payment.indexOfLast { it == ':' } + 1,
+                payment.indexOfLast { it == '}' }
+            ).trim().toBigDecimalOrNull() ?: BigDecimal.ZERO
+        }
+
+        fun addNow(payment: String) : String {
+            val pay = payment.substring(1, payment.length)
+            val now = "\"requestedAt\":\"${now().format(Formatters.localDateTimeFormatter)}\""
+            return "{$now,$pay"
+        }
+    }
+}
 
 @Serializable
 data class Summary(

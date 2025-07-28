@@ -1,6 +1,7 @@
 package com.example.api.handlers
 
 import com.example.api.repository.RedisRepository
+import com.example.models.core.Payment
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.ApplicationCall
 import io.ktor.server.request.receive
@@ -14,9 +15,10 @@ class PostPaymentsHandler(
 ) : RoutingHandler {
     override suspend fun invoke(ctx: RoutingContext) {
         try {
-            val payment = ctx.call.receive<String>()
+            val payment = Payment.addNow(ctx.call.receive<String>())
+            val score = Payment.getScore(payment)
 
-            while(!this.repository.enqueue(BigDecimal.ZERO, payment))
+            while(!this.repository.enqueue(score, payment))
 
             ctx.call.respondJson(body = "")
         } catch (_: Exception) {
