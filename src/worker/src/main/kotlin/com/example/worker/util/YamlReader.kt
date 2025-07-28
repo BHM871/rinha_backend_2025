@@ -1,6 +1,7 @@
 package com.example.worker.util
 
 import java.io.InputStreamReader
+import kotlin.collections.mutableMapOf
 
 class YamlReader(
     private val reader: InputStreamReader
@@ -155,6 +156,7 @@ class YamlReader(
 
         @Suppress("UNCHECKED_CAST")
         (phash[index-1]!!.second as MutableMap<String, Any?>)[phash[index]!!.first] = phash[index]?.second
+        phash.remove(index)
 
         return phash
     }
