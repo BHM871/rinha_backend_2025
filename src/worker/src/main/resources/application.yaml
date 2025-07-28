@@ -12,6 +12,14 @@ application:
             amount: 1
             module: com.example.worker.processors.HealthProcessor
 
+gateway:
+    default:
+        host: payment-processor-default
+        port: 8080
+    fallback:
+        host: payment-processor-fallback
+        port: 8080
+
 redis:
     host: ${REDIS_HOST:localhost}
     port: ${REDIS_PORT:6379}
