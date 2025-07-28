@@ -7,11 +7,14 @@ import io.ktor.server.application.Application
 import io.ktor.server.config.property
 import io.ktor.server.plugins.di.dependencies
 
-fun Application.configureRedis() {
+suspend fun Application.configureRedis() {
     val host = property<String>("redis.host")
     val port = property<Int>("redis.port")
     val poolSize = property<Int>("redis.poolSize")
 
-    dependencies.provide<Mediator> { RedisMediator(host, port, poolSize) }
-    dependencies.provide<RedisRepository> { RedisRepository(dependencies.resolve<Mediator>()) }
+    val mediator = RedisMediator(host, port, poolSize)
+    dependencies.provide<Mediator> { mediator }
+
+    val repository = RedisRepository(dependencies.resolve<Mediator>())
+    dependencies.provide<RedisRepository> { repository }
 }
