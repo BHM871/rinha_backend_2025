@@ -41,11 +41,9 @@ class ClientGateway(
     }
 
     override suspend fun health(): Health {
-        println("http://${host}:${port}/payments/service-health")
         val response = client.get("http://$host:$port/payments/service-health") {
             contentType(ContentType.Application.Json)
         }
-        println(response)
 
         return response.body<Health>()
     }

@@ -18,7 +18,6 @@ class PaymentProcessor(
 
         if (defaultHealth == null || fallbackHealth == null)
             return
-        println("$defaultHealth  $fallbackHealth")
         if (defaultHealth.failing && fallbackHealth.failing)
             return
 

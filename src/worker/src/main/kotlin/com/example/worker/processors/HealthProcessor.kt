@@ -17,13 +17,11 @@ class HealthProcessor(
     }
 
     override suspend fun process() {
-        while(true) {
-            try {
-                defaultHealth = default.client.health()
-                fallbackHealth = fallback.client.health()
-            } catch (_: Exception) {
-            }
-            delay(5000)
+        try {
+            defaultHealth = default.client.health()
+            fallbackHealth = fallback.client.health()
+        } catch (_: Exception) {
         }
+        delay(5000)
     }
 }
