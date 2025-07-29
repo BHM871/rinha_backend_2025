@@ -15,9 +15,9 @@ class RedisQueue(
 
     companion object {
         private lateinit var jedis: JedisPooled
+        private var isSetup = false
     }
 
-    private var isSetup = false
     private val queue = "payments:queue"
 
     override fun setup() {
