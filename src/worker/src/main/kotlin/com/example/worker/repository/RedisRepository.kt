@@ -23,7 +23,7 @@ class RedisRepository(
         return this.mediator.notify(this, Event.DEQUEUE, reverse) as String?
     }
 
-    override fun store(store: BigDecimal, date: LocalDateTime) {
-        this.mediator.notify(this, Event.STORAGE, store, date)
+    override fun store(store: BigDecimal, date: LocalDateTime, isDefault: Boolean) {
+        this.mediator.notify(this, Event.STORAGE, store, date, isDefault)
     }
 }

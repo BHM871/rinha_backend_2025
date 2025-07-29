@@ -37,7 +37,7 @@ class PaymentProcessor(
             val score = Payment.getScore(payment)
             val date = Payment.getDate(payment)
 
-            if (success) repository.store(score, date)
+            if (success) repository.store(score, date, onTop(defaultHealth, fallbackHealth))
             else repository.enqueue(Payment.getScore(payment), payment)
         } catch (_: Exception) {
         }
