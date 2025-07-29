@@ -24,7 +24,7 @@ class ClientGateway(
         }
     } }
 
-    override suspend fun processor(payment: String, timeout: Long): Boolean {
+    override suspend fun processor(payment: String, timeout: Long): Boolean? {
         try {
             val response = client.post("http://$host:$port/payments") {
                 timeout {
@@ -33,6 +33,8 @@ class ClientGateway(
                 contentType(ContentType.Application.Json)
                 setBody(payment)
             }
+
+            if (response.status.value == 422) return null
 
             return response.status.value == 200
         } catch (_: Exception) {

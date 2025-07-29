@@ -32,6 +32,8 @@ class PaymentProcessor(
                 fallback.client.processor(payment, (defaultHealth.minResponseTime * 1.5).toLong())
             }
 
+            if (success == null) return
+
             val score = Payment.getScore(payment)
             val date = Payment.getDate(payment)
 
