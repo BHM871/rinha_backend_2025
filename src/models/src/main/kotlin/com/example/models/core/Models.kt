@@ -19,6 +19,15 @@ class Payment {
             val now = "\"requestedAt\":\"${now().format(Formatters.localDateTimeFormatter)}\""
             return "{$now,$pay"
         }
+
+        fun getDate(payment: String) : LocalDateTime {
+            val date = payment.substring(
+                payment.indexOfFirst { it == ':' } + 1,
+                payment.indexOfFirst { it == ',' }
+            )
+
+            return LocalDateTime.parse(date.trim().substring(1, date.lastIndex), Formatters.localDateTimeFormatter)
+        }
     }
 }
 
