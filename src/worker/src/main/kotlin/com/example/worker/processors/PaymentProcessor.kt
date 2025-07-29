@@ -13,30 +13,32 @@ class PaymentProcessor(
     private val fallback: FallbackProcessor
 ) : Processor {
     override suspend fun process() {
-        val defaultHealth = HealthProcessor.defaultHealth
-        val fallbackHealth = HealthProcessor.fallbackHealth
+        try {
+            val defaultHealth = HealthProcessor.defaultHealth
+            val fallbackHealth = HealthProcessor.fallbackHealth
 
-        if (defaultHealth == null || fallbackHealth == null)
-            return
-        if (defaultHealth.failing && fallbackHealth.failing)
-            return
+            if (defaultHealth == null || fallbackHealth == null)
+                return
+            if (defaultHealth.failing && fallbackHealth.failing)
+                return
 
-        val payment = repository.dequeue(onTop(defaultHealth, fallbackHealth))
-        if (payment == null)
-            return
+            val payment = repository.dequeue(onTop(defaultHealth, fallbackHealth))
+            if (payment == null)
+                return
 
-        val success = if (onTop(defaultHealth, fallbackHealth)) {
-            default.client.processor(payment, (defaultHealth.minResponseTime * 1.5).toLong())
-        } else {
-            fallback.client.processor(payment, (defaultHealth.minResponseTime * 1.5).toLong())
+            val success = if (onTop(defaultHealth, fallbackHealth)) {
+                default.client.processor(payment, (defaultHealth.minResponseTime * 1.5).toLong())
+            } else {
+                fallback.client.processor(payment, (defaultHealth.minResponseTime * 1.5).toLong())
+            }
+
+            val score = Payment.getScore(payment)
+            val date = Payment.getDate(payment)
+
+            if (success) repository.store(score, date)
+            else repository.enqueue(Payment.getScore(payment), payment)
+        } catch (_: Exception) {
         }
-
-        val score = Payment.getScore(payment)
-        val date = Payment.getDate(payment)
-        println(date)
-
-        if (success) repository.store(score, date)
-        else repository.enqueue(Payment.getScore(payment), payment)
     }
 
     private fun onTop(default: Health, fallback: Health) : Boolean {
