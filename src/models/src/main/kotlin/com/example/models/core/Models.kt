@@ -15,7 +15,7 @@ class Payment {
         }
 
         fun addNow(payment: String) : String {
-            val pay = payment.substring(1, payment.length)
+            val pay = payment.substring(payment.indexOfFirst { it == '{' } + 1, payment.length)
             val now = "\"requestedAt\":\"${now().format(Formatters.localDateTimeFormatter)}\""
             return "{$now,$pay"
         }
