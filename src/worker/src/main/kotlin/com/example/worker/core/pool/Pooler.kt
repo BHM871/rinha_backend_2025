@@ -1,9 +1,9 @@
 package com.example.worker.core.pool
 
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.yield
 import org.slf4j.LoggerFactory
 
 class Pooler(
@@ -40,13 +40,12 @@ class Pooler(
         if (size <= 0)
             throw RuntimeException("Pooler size must be greater than 0")
 
-        log.info("Starting processor: ${name ?: processor}...")
-        repeat(size) {
+        log.info("Starting processors: ${name ?: processor}...")
+        repeat(size) { i ->
             scope.launch {
-                withContext(Dispatchers.IO) {
-                    while (true) {
-                        processor!!.process()
-                    }
+                while (isActive) {
+                    processor!!.process()
+                    yield()
                 }
             }
         }

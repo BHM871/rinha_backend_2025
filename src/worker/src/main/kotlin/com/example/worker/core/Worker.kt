@@ -20,7 +20,7 @@ class Worker {
         injectionResolver.loadInjectors()
         injectionResolver.inject()
 
-        val processors = Processors(this@Worker, Dispatchers.Default)
+        val processors = Processors(this@Worker, Dispatchers.IO)
         processors.loadProcessors()
         processors.startAll()
 

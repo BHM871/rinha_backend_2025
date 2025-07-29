@@ -3,22 +3,22 @@ worker:
         - com.example.worker.app.config.InjectorKt.inject
 
     processors:
-        payment:
-            name: "PaymentProcessor"
-            amount: ${PAYMENT_POOL_SIZE:10}
-            module: com.example.worker.processors.PaymentProcessor
         health:
             name: "PaymentProcessorHealth"
             amount: 1
             module: com.example.worker.processors.HealthProcessor
+        payment:
+            name: "PaymentProcessor"
+            amount: ${PAYMENT_POOL_SIZE:10}
+            module: com.example.worker.processors.PaymentProcessor
 
 gateway:
     default:
         host: ${DEFAULT_PAYMENT_HOST:localhost}
-        port: ${DEFAULT_PAYMENT_PORT:8081}
+        port: ${DEFAULT_PAYMENT_PORT:8001}
     fallback:
         host: ${FALLBACK_PAYMENT_HOST:localhost}
-        port: ${FALLBACK_PAYMENT_PORT:8082}
+        port: ${FALLBACK_PAYMENT_PORT:8002}
 
 redis:
     host: ${REDIS_HOST:localhost}

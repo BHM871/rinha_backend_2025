@@ -3,6 +3,7 @@ package com.example.worker.core
 import com.example.worker.core.pool.Pooler
 import com.example.worker.core.pool.Processor
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import org.slf4j.LoggerFactory
 
@@ -39,7 +40,7 @@ class Processors(
 
                 poolers.put(
                     it.key as String,
-                    Pooler(CoroutineScope(context))
+                    Pooler(CoroutineScope(context + CoroutineName(it.key as String)))
                         .name(name)
                         .size(size)
                         .of(processor)
