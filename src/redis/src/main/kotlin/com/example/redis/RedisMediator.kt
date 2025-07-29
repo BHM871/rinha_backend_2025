@@ -35,7 +35,7 @@ class RedisMediator : Mediator {
                 else -> null
             }
             is Storage -> when(event) {
-                Event.STORAGE -> storage.store(data[0]!! as BigDecimal, data[1]!! as LocalDateTime)
+                Event.STORAGE -> storage.store(data[0]!! as BigDecimal, data[1]!! as LocalDateTime, data[2]!! as Boolean)
                 Event.SUMMARY -> storage.getSummary(data[0]!! as FilterSummary)
                 else -> null
             }

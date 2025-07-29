@@ -7,7 +7,7 @@ import java.math.BigDecimal
 import java.time.LocalDateTime
 
 interface Storage : Component {
-    fun store(store: BigDecimal, data: LocalDateTime) {
+    fun store(store: BigDecimal, date: LocalDateTime, isDefault: Boolean) {
         TODO("Not Implemented Yet")
     }
 
