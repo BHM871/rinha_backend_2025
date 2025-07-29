@@ -65,7 +65,6 @@ class RedisStorage(
         if (!isSetup)
             setup()
 
-        println("$isDefault")
         jedis.hset(
             "$key:${stored++}",
             mapOf(
@@ -74,7 +73,6 @@ class RedisStorage(
                 Pair("amount", score.toString())
             )
         )
-        println("stored")
     }
 
     fun getSummary(filter: FilterSummary): Summary {
@@ -91,7 +89,6 @@ class RedisStorage(
         var fallback = createInfosEmpty()
 
         for (row in result.rows) {
-            println(row)
             if (row.get("processor") == "true")
                 default = createInfos(row)
             else
