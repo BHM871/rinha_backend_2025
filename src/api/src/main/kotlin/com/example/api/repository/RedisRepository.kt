@@ -10,24 +10,37 @@ import com.example.redis.core.app.components.Storage
 import java.math.BigDecimal
 
 class RedisRepository(
-    override val mediator: Mediator
-) : Queuer, Storage {
-    override fun enqueue(score: BigDecimal, payment: String) : Boolean {
-        return try {
-            this.mediator.notify(this, Event.ENQUEUE, score, payment)
-            true
-        } catch (_: Exception) {
-            false
+    private val mediator: Mediator
+) {
+
+    fun enqueue(score: BigDecimal, payment: String) : Boolean {
+        return queue.enqueue(score, payment)
+    }
+
+    fun getSummary(filter: FilterSummary) : Summary {
+        return storer.getSummary(filter)
+    }
+
+    val queue = object : Queuer {
+        override val mediator: Mediator
+            get() = this@RedisRepository.mediator
+
+        override fun enqueue(score: BigDecimal, payment: String) : Boolean {
+            return try {
+                this.mediator.notify(this, Event.ENQUEUE, score, payment)
+                true
+            } catch (_: Exception) {
+                false
+            }
         }
     }
 
-    override fun getSummary(filter: FilterSummary): Summary {
-        return (
-                this.mediator.notify(this, Event.SUMMARY, filter)
-                    ?: Summary(
-                        ProcessorInfos(0, BigDecimal.ZERO),
-                        ProcessorInfos(0, BigDecimal.ZERO)
-                    )
-                ) as Summary
+    val storer = object : Storage {
+        override val mediator: Mediator
+            get() = this@RedisRepository.mediator
+
+        override fun getSummary(filter: FilterSummary): Summary {
+            return (this.mediator.notify(this, Event.SUMMARY, filter) as Summary?)!!
+        }
     }
 }

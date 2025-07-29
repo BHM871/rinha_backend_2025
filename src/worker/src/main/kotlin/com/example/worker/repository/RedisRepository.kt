@@ -8,22 +8,45 @@ import java.math.BigDecimal
 import java.time.LocalDateTime
 
 class RedisRepository(
-    override val mediator: Mediator
-) : Queuer, Storage {
-    override fun enqueue(score: BigDecimal, payment: String): Boolean {
-        return try {
-            this.mediator.notify(this, Event.ENQUEUE, score, payment)
-            true
-        } catch (_: Exception) {
-            false
+    private val mediator: Mediator
+) {
+
+    fun enqueue(score: BigDecimal, payment: String) {
+        queue.enqueue(score, payment)
+    }
+
+    fun dequeue(onTop: Boolean = true) : String? {
+        return queue.dequeue(onTop)
+    }
+
+    fun store(score: BigDecimal, date: LocalDateTime, isDefault: Boolean) {
+        storer.store(score, date, isDefault)
+    }
+
+    val queue = object : Queuer {
+        override val mediator: Mediator
+            get() = this@RedisRepository.mediator
+
+        override fun enqueue(score: BigDecimal, payment: String) : Boolean {
+            return try {
+                this.mediator.notify(this, Event.ENQUEUE, score, payment)
+                true
+            } catch (_: Exception) {
+                false
+            }
+        }
+
+        override fun dequeue(reverse: Boolean) : String? {
+            return this.mediator.notify(this, Event.DEQUEUE, reverse) as String?
         }
     }
 
-    override fun dequeue(reverse: Boolean): String? {
-        return this.mediator.notify(this, Event.DEQUEUE, reverse) as String?
-    }
+    val storer = object : Storage {
+        override val mediator: Mediator
+            get() = this@RedisRepository.mediator
 
-    override fun store(store: BigDecimal, date: LocalDateTime, isDefault: Boolean) {
-        this.mediator.notify(this, Event.STORAGE, store, date, isDefault)
+        override fun store(score: BigDecimal, date: LocalDateTime, isDefault: Boolean) {
+            this.mediator.notify(this, Event.STORAGE, score, date, isDefault)
+        }
     }
 }
