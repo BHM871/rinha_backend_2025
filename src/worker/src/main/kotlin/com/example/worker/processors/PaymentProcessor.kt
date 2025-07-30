@@ -22,11 +22,12 @@ class PaymentProcessor(
             if (defaultHealth.failing && fallbackHealth.failing)
                 return
 
-            val payment = repository.dequeue(onTop(defaultHealth, fallbackHealth))
+            val onTop = onTop(defaultHealth, fallbackHealth)
+            val payment = CacheProcessor.dequeue(onTop)
             if (payment == null)
                 return
 
-            val success = if (onTop(defaultHealth, fallbackHealth)) {
+            val success = if (onTop) {
                 default.client.processor(payment, (defaultHealth.minResponseTime * 1.5).toLong())
             } else {
                 fallback.client.processor(payment, (defaultHealth.minResponseTime * 1.5).toLong())
@@ -37,8 +38,8 @@ class PaymentProcessor(
             val score = Payment.getScore(payment)
             val date = Payment.getDate(payment)
 
-            if (success) repository.store(score, date, onTop(defaultHealth, fallbackHealth))
-            else repository.enqueue(Payment.getScore(payment), payment)
+            if (success) repository.store(score, date, onTop)
+            else CacheProcessor.enqueue(payment)
         } catch (_: Exception) {
         }
     }
