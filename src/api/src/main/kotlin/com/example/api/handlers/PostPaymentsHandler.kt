@@ -8,7 +8,6 @@ import io.ktor.server.request.receive
 import io.ktor.server.response.respondNullable
 import io.ktor.server.routing.RoutingContext
 import io.ktor.server.routing.RoutingHandler
-import java.math.BigDecimal
 
 class PostPaymentsHandler(
     private val repository: RedisRepository
@@ -16,9 +15,8 @@ class PostPaymentsHandler(
     override suspend fun invoke(ctx: RoutingContext) {
         try {
             val payment = Payment.addNow(ctx.call.receive<String>())
-            val score = Payment.getScore(payment)
 
-            while(!this.repository.enqueue(score, payment)){}
+            while(!this.repository.enqueue(payment)){}
 
             ctx.call.respondJson(body = "")
         } catch (_: Exception) {

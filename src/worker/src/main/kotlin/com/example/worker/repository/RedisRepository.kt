@@ -11,12 +11,8 @@ class RedisRepository(
     private val mediator: Mediator
 ) {
 
-    fun enqueue(score: BigDecimal, payment: String) {
-        queue.enqueue(score, payment)
-    }
-
-    fun dequeue(onTop: Boolean = true) : String? {
-        return queue.dequeue(onTop)
+    fun dequeue() : String? {
+        return queue.dequeue()
     }
 
     fun store(score: BigDecimal, date: LocalDateTime, isDefault: Boolean) {
@@ -27,17 +23,8 @@ class RedisRepository(
         override val mediator: Mediator
             get() = this@RedisRepository.mediator
 
-        override fun enqueue(score: BigDecimal, payment: String) : Boolean {
-            return try {
-                this.mediator.notify(this, Event.ENQUEUE, score, payment)
-                true
-            } catch (_: Exception) {
-                false
-            }
-        }
-
-        override fun dequeue(reverse: Boolean) : String? {
-            return this.mediator.notify(this, Event.DEQUEUE, reverse) as String?
+        override fun dequeue() : String? {
+            return this.mediator.notify(this, Event.DEQUEUE) as String?
         }
     }
 

@@ -13,8 +13,8 @@ class RedisRepository(
     private val mediator: Mediator
 ) {
 
-    fun enqueue(score: BigDecimal, payment: String) : Boolean {
-        return queue.enqueue(score, payment)
+    fun enqueue(payment: String) : Boolean {
+        return queue.enqueue(payment)
     }
 
     fun getSummary(filter: FilterSummary) : Summary {
@@ -25,9 +25,9 @@ class RedisRepository(
         override val mediator: Mediator
             get() = this@RedisRepository.mediator
 
-        override fun enqueue(score: BigDecimal, payment: String) : Boolean {
+        override fun enqueue(payment: String) : Boolean {
             return try {
-                this.mediator.notify(this, Event.ENQUEUE, score, payment)
+                this.mediator.notify(this, Event.ENQUEUE, payment)
                 true
             } catch (_: Exception) {
                 false
