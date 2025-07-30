@@ -1,11 +1,8 @@
 package com.example.redis.gateway
 
-import com.example.models.core.Payment
-import com.example.models.plugins.getSerializer
 import com.example.redis.core.RedisClient
 import redis.clients.jedis.ConnectionPoolConfig
 import redis.clients.jedis.JedisPooled
-import java.math.BigDecimal
 
 class RedisQueue(
     override val host: String,
@@ -27,27 +24,20 @@ class RedisQueue(
         }
     }
 
-    fun enqueue(store: BigDecimal, payment: String) {
+    fun enqueue(payment: String) {
         if (!isSetup)
             setup()
 
-        jedis.zadd(
+        jedis.lpush(
             queue,
-            store.toDouble(),
             payment
         )
     }
 
-     fun dequeue(reverse: Boolean): String? {
+     fun dequeue(): String? {
         if (!isSetup)
             setup()
 
-        val tuple = if (reverse) {
-            jedis.zpopmax(queue)
-        } else {
-            jedis.zpopmin(queue)
-        }
-
-         return tuple?.element
+         return jedis.rpop(queue)
     }
 }
