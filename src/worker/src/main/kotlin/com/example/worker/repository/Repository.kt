@@ -12,6 +12,10 @@ class Repository(
     private val mediator: Mediator
 ) {
 
+    fun enqueue(payment: Payment) {
+        queue.enqueue(payment)
+    }
+
     fun dequeue(onTop: Boolean = true) : Payment? {
         return queue.dequeue(onTop)
     }
