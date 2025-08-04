@@ -31,7 +31,7 @@ class RedisMediator : Mediator {
     override fun notify(component: Component, event: Event, vararg data: Any?) : Any? {
         return when (component) {
             is Queuer -> when (event) {
-                Event.ENQUEUE -> queue.enqueue(data[0]!! as String)
+                Event.ENQUEUE -> queue.enqueue(data[0]!! as Payment)
                 Event.DEQUEUE -> queue.dequeue()
                 else -> null
             }

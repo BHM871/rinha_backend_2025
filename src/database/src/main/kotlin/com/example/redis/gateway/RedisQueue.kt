@@ -1,5 +1,6 @@
 package com.example.redis.gateway
 
+import com.example.models.core.Payment
 import com.example.redis.core.RedisClient
 import redis.clients.jedis.ConnectionPoolConfig
 import redis.clients.jedis.JedisPooled
@@ -24,20 +25,20 @@ class RedisQueue(
         }
     }
 
-    fun enqueue(payment: String) {
+    fun enqueue(payment: Payment) {
         if (!isSetup)
             setup()
 
         jedis.lpush(
             queue,
-            payment
+            payment.body
         )
     }
 
-     fun dequeue(): String? {
+     fun dequeue(): Payment? {
         if (!isSetup)
             setup()
 
-         return jedis.rpop(queue)
+         return Payment(jedis.rpop(queue))
     }
 }
