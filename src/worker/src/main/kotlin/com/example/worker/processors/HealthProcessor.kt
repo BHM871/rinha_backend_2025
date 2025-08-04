@@ -18,8 +18,16 @@ class HealthProcessor(
 
     override suspend fun process() {
         try {
-            defaultHealth = default.client.health()
-            fallbackHealth = fallback.client.health()
+            var tmp = default.client.health()
+            defaultHealth = Health(
+                tmp.failing,
+                if (tmp.minResponseTime <= 0) 1_000_000 else tmp.minResponseTime
+            )
+            tmp = fallback.client.health()
+            fallbackHealth = Health(
+                tmp.failing,
+                if (tmp.minResponseTime <= 0) 1_000_000 else tmp.minResponseTime
+            )
         } catch (_: Exception) {
         }
         delay(5000)
