@@ -21,8 +21,14 @@ class InMemoryQueue {
     }
 
     fun dequeue(onTop: Boolean) : Payment? {
-        return if (!onTop) queue.values.firstOrNull { it.isNotEmpty() }?.poll()
-        else queue.values.lastOrNull() { it.isNotEmpty() }?.poll()
+        if (queue.isEmpty()) return null
+
+        val queue = if (!onTop) queue.values.firstOrNull { it.isNotEmpty() }
+        else queue.values.lastOrNull { it.isNotEmpty() }
+
+        if (queue == null || queue.isEmpty()) return null
+
+        return queue.poll()
     }
 
     private fun createQueue() = PriorityBlockingQueue<Payment>(
