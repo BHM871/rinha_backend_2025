@@ -3,11 +3,11 @@ worker:
         - com.example.worker.app.config.InjectorKt.inject
 
     processors:
-        cache:
-            name: "QueueConsumer"
-            amount: 1
-            module: com.example.worker.processors.CacheProcessor
-            batch: ${CONSUMER_BATCH_SIZE:32}
+#        cache:
+#            name: "QueueConsumer"
+#            amount: 1
+#            module: com.example.worker.processors.CacheProcessor
+#            batch: ${CONSUMER_BATCH_SIZE:32}
         health:
             name: "PaymentProcessorHealth"
             amount: 1
