@@ -1,6 +1,6 @@
 package com.example.api.handlers
 
-import com.example.api.repository.RedisRepository
+import com.example.api.repository.Repository
 import com.example.models.core.Payment
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.ApplicationCall
@@ -10,7 +10,7 @@ import io.ktor.server.routing.RoutingContext
 import io.ktor.server.routing.RoutingHandler
 
 class PostPaymentsHandler(
-    private val repository: RedisRepository
+    private val repository: Repository
 ) : RoutingHandler {
     override suspend fun invoke(ctx: RoutingContext) {
         try {

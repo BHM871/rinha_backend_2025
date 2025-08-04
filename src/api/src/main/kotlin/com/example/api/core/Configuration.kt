@@ -1,6 +1,6 @@
 package com.example.api.core
 
-import com.example.api.repository.RedisRepository
+import com.example.api.repository.Repository
 import com.example.redis.RedisMediator
 import com.example.redis.core.app.Mediator
 import io.ktor.server.application.Application
@@ -15,6 +15,6 @@ suspend fun Application.configureRedis() {
     val mediator = RedisMediator(host, port, poolSize)
     dependencies.provide<Mediator> { mediator }
 
-    val repository = RedisRepository(dependencies.resolve<Mediator>())
-    dependencies.provide<RedisRepository> { repository }
+    val repository = Repository(dependencies.resolve<Mediator>())
+    dependencies.provide<Repository> { repository }
 }

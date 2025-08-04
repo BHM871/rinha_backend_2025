@@ -11,7 +11,7 @@ import com.example.worker.core.property
 import com.example.worker.processors.CacheProcessor
 import com.example.worker.processors.HealthProcessor
 import com.example.worker.processors.PaymentProcessor
-import com.example.worker.repository.RedisRepository
+import com.example.worker.repository.Repository
 
 fun Worker.inject() {
     redisInject()
@@ -27,8 +27,8 @@ fun Worker.redisInject() {
     val mediator = RedisMediator(host, port, poolSize)
     dependencies.provide(Mediator::class) { mediator }
 
-    val repository = RedisRepository( dependencies.resolve(Mediator::class)!! )
-    dependencies.provide(RedisRepository::class) { repository }
+    val repository = Repository( dependencies.resolve(Mediator::class)!! )
+    dependencies.provide(Repository::class) { repository }
 }
 
 fun Worker.gatewayInject() {
@@ -49,7 +49,7 @@ fun Worker.gatewayInject() {
 
 fun Worker.processorInject() {
     val payment = PaymentProcessor(
-        dependencies.resolve(RedisRepository::class)!!,
+        dependencies.resolve(Repository::class)!!,
         dependencies.resolve(DefaultProcessor::class)!!,
         dependencies.resolve(FallbackProcessor::class)!!
     )
@@ -58,7 +58,7 @@ fun Worker.processorInject() {
         dependencies.resolve(FallbackProcessor::class)!!
     )
     val consumer = CacheProcessor(
-        dependencies.resolve(RedisRepository::class)!!,
+        dependencies.resolve(Repository::class)!!,
         property("worker.processors.cache.batch", Int::class) ?: 10
     )
 

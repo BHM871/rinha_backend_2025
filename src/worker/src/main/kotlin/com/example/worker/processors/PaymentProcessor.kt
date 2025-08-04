@@ -1,14 +1,13 @@
 package com.example.worker.processors
 
-import com.example.models.core.Payment
 import com.example.worker.app.models.DefaultProcessor
 import com.example.worker.app.models.FallbackProcessor
 import com.example.worker.app.models.Health
 import com.example.worker.core.pool.Processor
-import com.example.worker.repository.RedisRepository
+import com.example.worker.repository.Repository
 
 class PaymentProcessor(
-    private val repository: RedisRepository,
+    private val repository: Repository,
     private val default: DefaultProcessor,
     private val fallback: FallbackProcessor
 ) : Processor {

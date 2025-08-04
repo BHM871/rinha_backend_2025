@@ -2,7 +2,7 @@ package com.example.worker.processors
 
 import com.example.models.core.Payment
 import com.example.worker.core.pool.Processor
-import com.example.worker.repository.RedisRepository
+import com.example.worker.repository.Repository
 import io.ktor.utils.io.InternalAPI
 import io.ktor.utils.io.locks.synchronized
 import kotlinx.coroutines.delay
@@ -10,7 +10,7 @@ import java.math.BigDecimal
 import java.util.PriorityQueue
 
 class CacheProcessor(
-    private val repository: RedisRepository,
+    private val repository: Repository,
     private val batch: Int
 ) : Processor {
 

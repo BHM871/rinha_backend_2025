@@ -8,14 +8,12 @@ import com.example.redis.core.app.components.Storage
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
-class RedisRepository(
+class Repository(
     private val mediator: Mediator
 ) {
 
     fun dequeue() : Payment? {
-        val pay = queue.dequeue()
-        return if (pay == null) pay
-        else Payment(pay)
+        return queue.dequeue()
     }
 
     fun store(score: BigDecimal, date: LocalDateTime, isDefault: Boolean) {
@@ -24,16 +22,16 @@ class RedisRepository(
 
     val queue = object : Queuer {
         override val mediator: Mediator
-            get() = this@RedisRepository.mediator
+            get() = this@Repository.mediator
 
-        override fun dequeue() : String? {
-            return this.mediator.notify(this, Event.DEQUEUE) as String?
+        override fun dequeue() : Payment? {
+            return this.mediator.notify(this, Event.DEQUEUE) as Payment?
         }
     }
 
     val storer = object : Storage {
         override val mediator: Mediator
-            get() = this@RedisRepository.mediator
+            get() = this@Repository.mediator
 
         override fun store(score: BigDecimal, date: LocalDateTime, isDefault: Boolean) {
             this.mediator.notify(this, Event.STORAGE, score, date, isDefault)
