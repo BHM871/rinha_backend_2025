@@ -28,6 +28,11 @@ class Repository(
         override val mediator: Mediator
             get() = this@Repository.mediator
 
+        override fun enqueue(payment: Payment): Boolean {
+            this.mediator.notify(this, Event.ENQUEUE, payment)
+            return true
+        }
+
         override fun dequeue(onTop: Boolean) : Payment? {
             return this.mediator.notify(this, Event.DEQUEUE, onTop) as Payment?
         }
