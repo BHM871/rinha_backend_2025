@@ -1,8 +1,8 @@
 package com.example.worker.app.config
 
-import com.example.redis.InMemoryMediator
-import com.example.redis.RedisMediator
-import com.example.redis.core.app.Mediator
+import com.example.database.InMemoryMediator
+import com.example.database.RedisMediator
+import com.example.database.core.app.Mediator
 import com.example.worker.app.models.DefaultProcessor
 import com.example.worker.app.models.FallbackProcessor
 import com.example.worker.client.ClientGateway

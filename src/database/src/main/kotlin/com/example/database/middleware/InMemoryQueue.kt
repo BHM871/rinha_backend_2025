@@ -1,4 +1,4 @@
-package com.example.redis.middleware
+package com.example.database.middleware
 
 import com.example.models.core.Payment
 import java.math.BigDecimal

@@ -1,7 +1,7 @@
-package com.example.redis.core.app.components
+package com.example.database.core.app.components
 
 import com.example.models.core.Payment
-import com.example.redis.core.app.Component
+import com.example.database.core.app.Component
 
 interface Queuer : Component {
     fun enqueue(payment: Payment) : Boolean {

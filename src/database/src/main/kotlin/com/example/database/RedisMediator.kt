@@ -1,14 +1,14 @@
-package com.example.redis
+package com.example.database
 
 import com.example.models.core.FilterSummary
 import com.example.models.core.Payment
-import com.example.redis.core.app.Component
-import com.example.redis.core.app.Event
-import com.example.redis.core.app.Mediator
-import com.example.redis.core.app.components.Queuer
-import com.example.redis.core.app.components.Storage
-import com.example.redis.gateway.RedisQueue
-import com.example.redis.gateway.RedisStorage
+import com.example.database.core.app.Component
+import com.example.database.core.app.Event
+import com.example.database.core.app.Mediator
+import com.example.database.core.app.components.Queuer
+import com.example.database.core.app.components.Storage
+import com.example.database.gateway.RedisQueue
+import com.example.database.gateway.RedisStorage
 import redis.clients.jedis.ConnectionPoolConfig
 import java.math.BigDecimal
 import java.time.LocalDateTime

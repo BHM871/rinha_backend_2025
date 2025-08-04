@@ -1,9 +1,9 @@
 package com.example.api.core
 
 import com.example.api.repository.Repository
-import com.example.redis.InMemoryMediator
-import com.example.redis.RedisMediator
-import com.example.redis.core.app.Mediator
+import com.example.database.InMemoryMediator
+import com.example.database.RedisMediator
+import com.example.database.core.app.Mediator
 import io.ktor.server.application.Application
 import io.ktor.server.config.property
 import io.ktor.server.plugins.di.dependencies

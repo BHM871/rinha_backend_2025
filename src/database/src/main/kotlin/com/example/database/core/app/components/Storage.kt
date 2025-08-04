@@ -1,8 +1,8 @@
-package com.example.redis.core.app.components
+package com.example.database.core.app.components
 
 import com.example.models.core.FilterSummary
 import com.example.models.core.Summary
-import com.example.redis.core.app.Component
+import com.example.database.core.app.Component
 import java.math.BigDecimal
 import java.time.LocalDateTime
 

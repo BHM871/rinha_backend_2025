@@ -1,9 +1,9 @@
-package com.example.redis.gateway
+package com.example.database.gateway
 
 import com.example.models.core.FilterSummary
 import com.example.models.core.ProcessorInfos
 import com.example.models.core.Summary
-import com.example.redis.core.RedisClient
+import com.example.database.core.RedisClient
 import redis.clients.jedis.ConnectionPoolConfig
 import redis.clients.jedis.JedisPooled
 import redis.clients.jedis.search.FTCreateParams

@@ -3,10 +3,10 @@ package com.example.api.repository
 import com.example.models.core.FilterSummary
 import com.example.models.core.Payment
 import com.example.models.core.Summary
-import com.example.redis.core.app.Event
-import com.example.redis.core.app.Mediator
-import com.example.redis.core.app.components.Queuer
-import com.example.redis.core.app.components.Storage
+import com.example.database.core.app.Event
+import com.example.database.core.app.Mediator
+import com.example.database.core.app.components.Queuer
+import com.example.database.core.app.components.Storage
 
 class Repository(
     private val mediator: Mediator

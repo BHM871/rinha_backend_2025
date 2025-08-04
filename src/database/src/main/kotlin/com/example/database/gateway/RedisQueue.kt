@@ -1,7 +1,7 @@
-package com.example.redis.gateway
+package com.example.database.gateway
 
 import com.example.models.core.Payment
-import com.example.redis.core.RedisClient
+import com.example.database.core.RedisClient
 import redis.clients.jedis.ConnectionPoolConfig
 import redis.clients.jedis.JedisPooled
 

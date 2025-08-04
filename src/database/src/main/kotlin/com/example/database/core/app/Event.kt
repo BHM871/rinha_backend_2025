@@ -1,4 +1,4 @@
-package com.example.redis.core.app
+package com.example.database.core.app
 
 enum class Event {
     ENQUEUE,
