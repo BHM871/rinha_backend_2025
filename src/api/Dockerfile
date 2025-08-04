@@ -9,7 +9,7 @@ COPY --from=project settings.gradle.kts .
 # Copy source code and other project files
 COPY --from=modules api ./src/api
 COPY --from=modules models ./src/models
-COPY --from=modules redis ./src/redis
+COPY --from=modules database ./src/database
 
 # Build the fat JAR (or shadow JAR/boot JAR)
 RUN gradle src:api:buildFatJar --no-daemon
