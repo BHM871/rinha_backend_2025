@@ -15,10 +15,10 @@ class CacheProcessor(
 ) : Processor {
 
     companion object {
-        private val cache: MutableMap<Long, PriorityQueue<String>> = hashMapOf()
+        private val cache: MutableMap<Long, PriorityQueue<Payment>> = hashMapOf()
 
-        fun enqueue(payment: String) {
-            val score = Payment.getScore(payment).toLong()
+        fun enqueue(payment: Payment) {
+            val score = payment.score.toLong()
             if (!cache.containsKey(score))
                 cache[score] = createQueue()
 
@@ -26,20 +26,17 @@ class CacheProcessor(
         }
 
         @OptIn(InternalAPI::class)
-        fun dequeue(onTop: Boolean) : String? {
+        fun dequeue(onTop: Boolean) : Payment? {
             synchronized(cache) {
-                val a = if (!onTop) cache.values.first { it.isNotEmpty() }.poll()
+                return if (!onTop) cache.values.first { it.isNotEmpty() }.poll()
                 else cache.values.last { it.isNotEmpty() } .poll()
-                println(cache)
-                if (a!=null) println(a)
-                return a
             }
         }
 
-        private fun createQueue() = PriorityQueue<String>(
+        private fun createQueue() = PriorityQueue<Payment>(
             Comparator { o1, o2 ->
-                Payment.getScore(o1)
-                    .minus(Payment.getScore(o2))
+                o1.score
+                    .minus(o2.score)
                     .multiply(BigDecimal.valueOf(10000))
                     .toInt()
             }

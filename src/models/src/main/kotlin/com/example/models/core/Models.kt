@@ -5,28 +5,56 @@ import kotlinx.serialization.Serializable
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
-class Payment {
-    companion object {
-        fun getScore(payment: String) : BigDecimal {
-            return payment.substring(
-                payment.indexOfLast { it == ':' } + 1,
-                payment.indexOfLast { it == '}' }
-            ).trim().toBigDecimalOrNull() ?: BigDecimal.ZERO
+class Payment(
+    payment: String
+) {
+
+    var buffer = StringBuilder(payment)
+
+    val body: String
+        get() = buffer.toString()
+
+    private var _score: BigDecimal? = null
+    val score: BigDecimal
+        get() = _score ?: score()
+
+    private var _date: LocalDateTime? = null
+    val date: LocalDateTime
+        get() {
+            addNow()
+            return _date!!
         }
 
-        fun addNow(payment: String) : String {
-            val pay = payment.substring(payment.indexOfFirst { it == '{' } + 1, payment.length)
-            val now = "\"requestedAt\":\"${now().format(Formatters.localDateTimeFormatter)}\""
-            return "{$now,$pay"
-        }
+    private fun score() : BigDecimal {
+        _score = buffer.substring(
+            buffer.lastIndexOf(':') + 1,
+            buffer.lastIndexOf('}')
+        ).trim().toBigDecimalOrNull() ?: BigDecimal.ZERO
+        return _score!!
+    }
 
-        fun getDate(payment: String) : LocalDateTime {
-            val date = payment.substring(
-                payment.indexOfFirst { it == ':' } + 1,
-                payment.indexOfFirst { it == ',' }
-            )
+    fun addNow() {
+        if (_date != null || date() != null) return
 
-            return LocalDateTime.parse(date.trim().substring(1, date.lastIndex), Formatters.localDateTimeFormatter)
+        buffer.deleteAt(buffer.indexOf('{'))
+        buffer.insert(0,"{\"requestAt\":\"", 0, 14)
+        buffer.insert(14, now().format(Formatters.localDateTimeFormatter), 0, 24)
+        buffer.insert(38, "\",", 0, 2)
+
+        date()
+    }
+
+    private fun date() : LocalDateTime? {
+        val date = buffer.substring(
+            buffer.indexOf(':') + 2,
+            buffer.indexOf(',')
+        )
+
+        try {
+            _date = LocalDateTime.parse(date.trim(), Formatters.localDateTimeFormatter)
+            return _date!!
+        } catch (_: Exception) {
+            return null
         }
     }
 }

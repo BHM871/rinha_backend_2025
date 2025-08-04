@@ -1,5 +1,6 @@
 package com.example.worker.repository
 
+import com.example.models.core.Payment
 import com.example.redis.core.app.Event
 import com.example.redis.core.app.Mediator
 import com.example.redis.core.app.components.Queuer
@@ -11,8 +12,10 @@ class RedisRepository(
     private val mediator: Mediator
 ) {
 
-    fun dequeue() : String? {
-        return queue.dequeue()
+    fun dequeue() : Payment? {
+        val pay = queue.dequeue()
+        return if (pay == null) pay
+        else Payment(pay)
     }
 
     fun store(score: BigDecimal, date: LocalDateTime, isDefault: Boolean) {

@@ -1,6 +1,7 @@
 package com.example.redis
 
 import com.example.models.core.FilterSummary
+import com.example.models.core.Payment
 import com.example.redis.core.app.Component
 import com.example.redis.core.app.Event
 import com.example.redis.core.app.Mediator

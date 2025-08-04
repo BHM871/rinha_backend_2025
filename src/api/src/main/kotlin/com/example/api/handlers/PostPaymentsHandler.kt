@@ -14,7 +14,8 @@ class PostPaymentsHandler(
 ) : RoutingHandler {
     override suspend fun invoke(ctx: RoutingContext) {
         try {
-            val payment = Payment.addNow(ctx.call.receive<String>())
+            val payment = Payment(ctx.call.receive<String>())
+            payment.addNow()
 
             while(!this.repository.enqueue(payment)){}
 
