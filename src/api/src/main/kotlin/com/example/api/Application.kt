@@ -1,6 +1,6 @@
 package com.example.api
 
-import com.example.api.core.configureRedis
+import com.example.api.core.configureDatabase
 import com.example.api.plugins.configureRouting
 import com.example.api.plugins.configureSerialization
 import com.example.api.repository.Repository
@@ -13,7 +13,7 @@ fun main(args: Array<String>) {
 }
 
 suspend fun Application.module() {
-    configureRedis()
+    configureDatabase()
     configureSerialization()
     configureRouting(dependencies.resolve<Repository>())
 }

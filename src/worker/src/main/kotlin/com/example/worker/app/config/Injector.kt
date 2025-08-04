@@ -1,5 +1,6 @@
 package com.example.worker.app.config
 
+import com.example.redis.InMemoryMediator
 import com.example.redis.RedisMediator
 import com.example.redis.core.app.Mediator
 import com.example.worker.app.models.DefaultProcessor
@@ -14,24 +15,38 @@ import com.example.worker.processors.PaymentProcessor
 import com.example.worker.repository.Repository
 
 fun Worker.inject() {
-    redisInject()
+    databaseInject()
     gatewayInject()
     processorInject()
 }
 
-fun Worker.redisInject() {
+// =================================================
+
+private fun Worker.databaseInject() {
+//    redisInject()
+    inMemoryInject()
+
+    val repository = Repository( dependencies.resolve(Mediator::class)!! )
+    dependencies.provide(Repository::class) { repository }
+}
+
+private fun Worker.redisInject() {
     val host = property("redis.host", String::class)!!
     val port = property("redis.port", Int::class)!!
     val poolSize = property("redis.poolSize", Int::class)
 
     val mediator = RedisMediator(host, port, poolSize)
     dependencies.provide(Mediator::class) { mediator }
-
-    val repository = Repository( dependencies.resolve(Mediator::class)!! )
-    dependencies.provide(Repository::class) { repository }
 }
 
-fun Worker.gatewayInject() {
+private fun Worker.inMemoryInject() {
+    val mediator = InMemoryMediator()
+    dependencies.provide(Mediator::class) { mediator }
+}
+
+// =================================================
+
+private fun Worker.gatewayInject() {
     var host = property("gateway.default.host", String::class)!!
     var port = property("gateway.default.port", Int::class)!!
     var client = ClientGateway(host, port)
@@ -47,7 +62,9 @@ fun Worker.gatewayInject() {
     dependencies.provide(FallbackProcessor::class) { fallback }
 }
 
-fun Worker.processorInject() {
+// =================================================
+
+private fun Worker.processorInject() {
     val payment = PaymentProcessor(
         dependencies.resolve(Repository::class)!!,
         dependencies.resolve(DefaultProcessor::class)!!,
