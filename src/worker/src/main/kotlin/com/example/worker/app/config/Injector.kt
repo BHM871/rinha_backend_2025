@@ -9,7 +9,6 @@ import com.example.worker.client.ClientGateway
 import com.example.worker.core.Worker
 import com.example.worker.core.dependencies
 import com.example.worker.core.property
-import com.example.worker.processors.CacheProcessor
 import com.example.worker.processors.HealthProcessor
 import com.example.worker.processors.PaymentProcessor
 import com.example.worker.repository.Repository

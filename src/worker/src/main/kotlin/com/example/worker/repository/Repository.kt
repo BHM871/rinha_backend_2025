@@ -12,8 +12,8 @@ class Repository(
     private val mediator: Mediator
 ) {
 
-    fun dequeue() : Payment? {
-        return queue.dequeue()
+    fun dequeue(onTop: Boolean) : Payment? {
+        return queue.dequeue(onTop)
     }
 
     fun store(score: BigDecimal, date: LocalDateTime, isDefault: Boolean) {
@@ -24,8 +24,8 @@ class Repository(
         override val mediator: Mediator
             get() = this@Repository.mediator
 
-        override fun dequeue() : Payment? {
-            return this.mediator.notify(this, Event.DEQUEUE) as Payment?
+        override fun dequeue(onTop: Boolean) : Payment? {
+            return this.mediator.notify(this, Event.DEQUEUE, onTop) as Payment?
         }
     }
 

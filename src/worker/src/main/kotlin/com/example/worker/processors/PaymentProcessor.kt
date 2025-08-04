@@ -22,7 +22,7 @@ class PaymentProcessor(
                 return
 
             val onTop = onTop(defaultHealth, fallbackHealth)
-            val payment = CacheProcessor.dequeue(onTop)
+            val payment = repository.dequeue(onTop)
             if (payment == null)
                 return
 
@@ -35,7 +35,7 @@ class PaymentProcessor(
             if (success == null) return
 
             if (success) repository.store(payment.score, payment.date, onTop)
-            else CacheProcessor.enqueue(payment)
+            else repository.enqueue(payment)
         } catch (_: Exception) {
         }
     }

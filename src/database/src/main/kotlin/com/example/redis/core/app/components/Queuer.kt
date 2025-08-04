@@ -7,7 +7,7 @@ interface Queuer : Component {
     fun enqueue(payment: Payment) : Boolean {
         TODO("Not Implemented Yet")
     }
-    fun dequeue() : Payment? {
+    fun dequeue(onTop: Boolean) : Payment? {
         TODO("Not Implemented Yet")
     }
 }
