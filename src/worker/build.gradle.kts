@@ -24,6 +24,6 @@ dependencies {
     implementation(libs.ktor.client.content.negotiation)
     implementation(libs.ktor.serialization)
     implementation(project(":src:models"))
-    implementation(project(":src:redis"))
+    implementation(project(":src:database"))
     testImplementation(libs.kotlin.test.junit)
 }

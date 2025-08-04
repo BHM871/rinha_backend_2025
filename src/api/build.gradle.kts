@@ -26,7 +26,7 @@ dependencies {
     implementation(libs.ktor.server.config.yaml)
     implementation(libs.ktor.dependency.injector)
     implementation(project(":src:models"))
-    implementation(project(":src:redis"))
+    implementation(project(":src:database"))
     testImplementation(libs.ktor.server.test.host)
     testImplementation(libs.kotlin.test.junit)
 }
