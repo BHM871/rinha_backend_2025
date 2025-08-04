@@ -15,7 +15,7 @@ class RedisRepository(
 ) {
 
     fun enqueue(payment: Payment) : Boolean {
-        return queue.enqueue(payment)
+        return queue.enqueue(payment.body)
     }
 
     fun getSummary(filter: FilterSummary) : Summary {
@@ -26,7 +26,7 @@ class RedisRepository(
         override val mediator: Mediator
             get() = this@RedisRepository.mediator
 
-        override fun enqueue(payment: Payment) : Boolean {
+        override fun enqueue(payment: String) : Boolean {
             return try {
                 this.mediator.notify(this, Event.ENQUEUE, payment)
                 true
