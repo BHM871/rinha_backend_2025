@@ -9,17 +9,18 @@ import java.time.ZoneOffset
 
 class InMemoryStorage {
     companion object {
-        private val default = hashMapOf<Long, BigDecimal>()
-        private val fallback = hashMapOf<Long, BigDecimal>()
+        private val default = hashMapOf<Long, Pair<Int, BigDecimal>>()
+        private val fallback = hashMapOf<Long, Pair<Int, BigDecimal>>()
     }
 
     fun store(score: BigDecimal, date: LocalDateTime, isDefault: Boolean) {
+        val millis = date.toMillis()
         if (isDefault) {
-            val current = default[date.toMillis()]
-            default[date.toMillis()] = score.add(current ?: BigDecimal.ZERO)
+            val current = default[millis]
+            default[millis] = Pair((current?.first ?: 0) + 1, score.add(current?.second ?: BigDecimal.ZERO))
         } else {
-            val current = fallback[date.toMillis()]
-            fallback[date.toMillis()] = score.add(current ?: BigDecimal.ZERO)
+            val current = fallback[millis]
+            fallback[millis] = Pair((current?.first ?: 0) + 1, score.add(current?.second ?: BigDecimal.ZERO))
         }
     }
 
@@ -30,9 +31,8 @@ class InMemoryStorage {
         var requests = 0
         var amount = BigDecimal.ZERO
         default.entries
-                .parallelStream()
                 .filter { it.key >= fromMillis && it.key <= toMillis }
-                .forEach { amount.add(it.value); requests++ }
+                .forEach { amount = amount.add(it.value.second); requests += it.value.first }
         val defaultProcessor = ProcessorInfos(
             requests,
             amount
@@ -41,9 +41,8 @@ class InMemoryStorage {
         requests = 0
         amount = BigDecimal.ZERO
         fallback.entries
-            .parallelStream()
             .filter { it.key >= fromMillis && it.key <= toMillis }
-            .forEach { amount.add(it.value); requests++ }
+            .forEach { amount = amount.add(it.value.second); requests += it.value.first }
         val fallbackProcessor = ProcessorInfos(
             requests,
             amount
