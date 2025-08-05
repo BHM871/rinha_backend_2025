@@ -77,7 +77,7 @@ data class FilterSummary(
     val to: LocalDateTime? = null
 ) {
     constructor(from: String?, to: String?) : this(
-        LocalDateTime.parse(from ?: "0001-01-01T00:00:00.000Z", Formatters.localDateTimeFormatter),
-        LocalDateTime.parse(to ?: "9999-01-01T00:00:00.000Z", Formatters.localDateTimeFormatter)
+        if (from != null) LocalDateTime.parse(from, Formatters.localDateTimeFormatter) else null,
+        if (to != null) LocalDateTime.parse(to, Formatters.localDateTimeFormatter) else null
     )
 }
