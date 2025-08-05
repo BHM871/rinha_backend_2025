@@ -17,53 +17,61 @@ services:
 
   api01: &api
     image: bhm871/rinha-backend.api:2025
+    container_name: api01
     build:
       dockerfile: src/api/Dockerfile
       additional_contexts:
         - project=.
         - modules=src/
     environment:
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - REDIS_POOL_SIZE=64
-    depends_on:
-      - redis
-    networks:
-      - backend
-
-  api02:
-    <<: *api
-    container_name: api02
-
-  redis:
-    image: redis:8-alpine
-    container_name: redis
-    networks:
-      - backend
-
-  worker:
-    image: bhm871/rinha-backend.worker:2025
-    build:
-      dockerfile: src/worker/Dockerfile
-      additional_contexts:
-        - project=.
-        - modules=src/
-    container_name: worker
-    environment:
       - DEFAULT_PAYMENT_HOST=payment-processor-default
       - DEFAULT_PAYMENT_PORT=8080
       - FALLBACK_PAYMENT_HOST=payment-processor-fallback
       - FALLBACK_PAYMENT_PORT=8080
       - CONSUMER_BATCH_SIZE=256
-      - PAYMENT_POOL_SIZE=64
+      - PAYMENT_POOL_SIZE=12
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - REDIS_POOL_SIZE=64
-    depends_on:
-      - redis
+#    depends_on:
+#      - redis
     networks:
       - backend
       - payment-processor
+
+  api02:
+    <<: *api
+    container_name: api02
+
+#  redis:
+#    image: redis:8-alpine
+#    container_name: redis
+#    networks:
+#      - backend
+
+#  worker:
+#    image: bhm871/rinha-backend.worker:2025
+#    build:
+#      dockerfile: src/worker/Dockerfile
+#      additional_contexts:
+#        - project=.
+#        - modules=src/
+#    container_name: worker
+#    environment:
+#      - DEFAULT_PAYMENT_HOST=payment-processor-default
+#      - DEFAULT_PAYMENT_PORT=8080
+#      - FALLBACK_PAYMENT_HOST=payment-processor-fallback
+#      - FALLBACK_PAYMENT_PORT=8080
+#      - CONSUMER_BATCH_SIZE=256
+#      - PAYMENT_POOL_SIZE=64
+#      - REDIS_HOST=redis
+#      - REDIS_PORT=6379
+#      - REDIS_POOL_SIZE=64
+#    depends_on:
+#      - redis
+#    networks:
+#      - backend
+#      - payment-processor
 
 networks:
   backend:
