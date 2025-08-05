@@ -43,9 +43,12 @@ class Pooler(
         log.info("Starting processors: ${name ?: processor}...")
         repeat(size) { i ->
             scope.launch {
-                while (isActive) {
-                    processor!!.process()
-                    yield()
+                try {
+                    while (isActive) {
+                        processor!!.process()
+                        yield()
+                    }
+                } catch (_: Exception) {
                 }
             }
         }
