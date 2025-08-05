@@ -10,6 +10,7 @@ COPY --from=project settings.gradle.kts .
 COPY --from=modules api ./src/api
 COPY --from=modules models ./src/models
 COPY --from=modules database ./src/database
+COPY --from=modules worker ./src/worker
 
 # Build the fat JAR (or shadow JAR/boot JAR)
 RUN gradle src:api:buildFatJar --no-daemon

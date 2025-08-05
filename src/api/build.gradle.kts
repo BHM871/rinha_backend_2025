@@ -9,7 +9,7 @@ group = "com.example"
 version = "0.0.1"
 
 application {
-    mainClass = "io.ktor.server.netty.EngineMain"
+    mainClass = "com.example.api.ApplicationKt"
 }
 
 repositories {
@@ -27,6 +27,7 @@ dependencies {
     implementation(libs.ktor.dependency.injector)
     implementation(project(":src:models"))
     implementation(project(":src:database"))
+    implementation(project(":src:worker"))
     testImplementation(libs.ktor.server.test.host)
     testImplementation(libs.kotlin.test.junit)
 }
