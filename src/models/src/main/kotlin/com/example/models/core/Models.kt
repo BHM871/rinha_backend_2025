@@ -37,9 +37,9 @@ class Payment(
         if (_date != null || date() != null) return
 
         buffer.deleteAt(buffer.indexOf('{'))
-        buffer.insert(0,"{\"requestAt\":\"", 0, 14)
-        buffer.insert(14, now().format(Formatters.localDateTimeFormatter), 0, 24)
-        buffer.insert(38, "\",", 0, 2)
+        buffer.insert(0,"{\"requestedAt\":\"", 0, 16)
+        buffer.insert(16, now().format(Formatters.localDateTimeFormatter), 0, 24)
+        buffer.insert(40, "\",", 0, 2)
 
         date()
     }
@@ -47,7 +47,7 @@ class Payment(
     private fun date() : LocalDateTime? {
         val date = buffer.substring(
             buffer.indexOf(':') + 2,
-            buffer.indexOf(',')
+            buffer.indexOf(',') - 1
         )
 
         try {
